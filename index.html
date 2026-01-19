@@ -276,7 +276,43 @@ write_bitstream -force ./build_output/final.bit</code></pre>
       <h1>VIM Mastery: Pro Level</h1>
       <p>기본 이동을 넘어서, 코딩 속도를 2배로 올려줄 고급 기능들입니다.</p>
 
-      <h2>1. 다중 창 활용 (Window Splits)</h2>
+      <h2>1. 파일 조작 및 쉘 전환 (File Ops & Shell)</h2>
+      <p>가장 기초적인 파일 열기, 저장, 종료 방법과 작업 중 잠시 쉘로 나가는 방법입니다.</p>
+
+      <h3>파일 열기 및 저장/종료</h3>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>파일 열기</span>
+          <span class="kbd-group"><span class="key">vim</span><span>파일명</span></span>
+        </div>
+        <div class="shortcut-card">
+          <span>저장하기</span>
+          <span class="kbd-group"><span class="key">:</span><span>w</span></span>
+        </div>
+        <div class="shortcut-card">
+          <span>저장하고 종료</span>
+          <span class="kbd-group"><span class="key">:</span><span>wq</span></span>
+        </div>
+        <div class="shortcut-card">
+          <span>강제 종료 (저장X)</span>
+          <span class="kbd-group"><span class="key">:</span><span>q!</span></span>
+        </div>
+      </div>
+
+      <h3>잠시 쉘로 나가기 (Suspend/Foreground)</h3>
+      <p>편집기를 끄지 않고 터미널 명령어를 써야 할 때(예: git status, 파일 목록 확인) 유용합니다.</p>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>작업 일시 중단 (Suspend)</span>
+          <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">z</span></span>
+        </div>
+        <div class="shortcut-card">
+          <span>편집기 복귀 (Foreground)</span>
+          <span class="kbd-group"><span class="key">fg</span></span>
+        </div>
+      </div>
+
+      <h2>2. 다중 창 활용 (Window Splits)</h2>
       <p>Testbench와 RTL 코드를 동시에 띄워놓고 비교할 때 필수입니다.</p>
       <div class="shortcut-grid">
         <div class="shortcut-card">
@@ -298,7 +334,7 @@ write_bitstream -force ./build_output/final.bit</code></pre>
         </div>
       </div>
 
-      <h2>2. 검색 및 일괄 치환 (Search & Replace)</h2>
+      <h2>3. 검색 및 일괄 치환 (Search & Replace)</h2>
       <p>변수명을 한 번에 바꿀 때 유용합니다. Verilog 리팩토링의 핵심입니다.</p>
       <pre><code class="language-bash"># 기본 검색 (Normal Mode)
 /clk_en      # 아래로 'clk_en' 검색
@@ -323,7 +359,7 @@ n / N        # 다음 / 이전 찾기
 # Tip: 'g' (global) 플래그를 빼면 각 줄의 첫 번째 일치 항목만 바뀝니다.
 # :%s/old/new        # (각 줄의 첫 번째 'old'만 'new'로 변경)</code></pre>
 
-      <h2>3. 매크로 (Macros): 반복 작업 자동화</h2>
+      <h2>4. 매크로 (Macros): 반복 작업 자동화</h2>
       <p>규칙적인 노가다성 코드 수정(예: 100개의 포트 연결)을 자동화합니다.</p>
       <ol style="margin-left: 20px; line-height: 2;">
         <li><strong>녹화 시작:</strong> Normal Mode에서 <span class="key">q</span> 누르고 레지스터 키(예: <span class="key">a</span>)
@@ -334,7 +370,7 @@ n / N        # 다음 / 이전 찾기
             class="key">100</span><span class="key">@</span><span class="key">a</span> (100회 반복).</li>
       </ol>
 
-      <h2>4. .vimrc 설정 (엔지니어 필수)</h2>
+      <h2>5. .vimrc 설정 (엔지니어 필수)</h2>
       <p>홈 디렉토리의 <code>~/.vimrc</code> 파일에 아래 내용을 추가하여 가독성을 높이세요.</p>
       <pre><code class="language-plaintext">" 문법 강조
 syntax on
