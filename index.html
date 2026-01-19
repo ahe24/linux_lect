@@ -137,6 +137,41 @@ sudo chown -R root:eda_users /tools
 
 # 권한 설정 (소유자: RWX, 그룹: RX, 기타: RX)
 sudo chmod -R 755 /tools</code></pre>
+      <h2>3. 파일 관리 및 압축 (Archiving)</h2>
+      <p>프로젝트 백업 및 대용량 시뮬레이션 데이터 이동 시 필수적인 명령어입니다.</p>
+
+      <h3>파일 복사 및 이동</h3>
+      <pre><code class="language-bash"># 디렉토리 통째로 복사 (-r: recursive, -p: 권한 보존, -v: 상세 출력)
+cp -rpv project_v1 project_v1_backup
+
+# 파일 이동 및 이름 변경
+mv old_name.v new_name.v
+mv *.v ../backup/</code></pre>
+
+      <h3>압축 및 해제 (tar)</h3>
+      <p>Linux에서는 주로 <code>tar.gz</code> 형식을 사용합니다. 옵션 순서(czvf)를 외워두면 편합니다.</p>
+      <div class="note-box">
+        <i data-lucide="package"></i>
+        <div>
+          <strong>핵심 옵션:</strong>
+          <ul style="list-style: disc; margin-left: 20px; margin-top: 5px;">
+            <li><strong>c</strong>: Create (압축 생성)</li>
+            <li><strong>x</strong>: Extract (압축 해제)</li>
+            <li><strong>z</strong>: gzip 압축 사용</li>
+            <li><strong>v</strong>: Verbose (과정 출력)</li>
+            <li><strong>f</strong>: File (파일명 지정, 항상 마지막에 위치)</li>
+          </ul>
+        </div>
+      </div>
+
+      <pre><code class="language-bash"># 프로젝트 압축하기 (현재 디렉토리의 projectA 폴더를 archive.tar.gz로)
+tar -czvf archive.tar.gz ./projectA
+
+# 압축 해제하기
+tar -xzvf archive.tar.gz
+
+# 특정 디렉토리에 풀기 (-C 옵션)
+tar -xzvf archive.tar.gz -C /data/restore/</code></pre>
     </section>
 
     <!-- FPGA WORKFLOW SECTION (Questasim & Make) -->
@@ -155,35 +190,41 @@ sudo chmod -R 755 /tools</code></pre>
             <li><code>vlib work</code>: 컴파일된 디자인 유닛들이 저장될 물리적인 디렉토리를 생성합니다.</li>
             <li><code>vmap work work</code>: 논리적인 라이브러리 이름(work)을 물리적 디렉토리에 매핑합니다.</li>
             <li><code>vlog</code>: Verilog/SystemVerilog 컴파일러. <code>+incdir+</code> 옵션으로 헤더 파일 경로를 지정하는 것이 필수입니다.</li>
-            <li><code>vopt +acc</code>: 코드 최적화를 수행하되, <strong>+acc</strong> 옵션을 통해 시뮬레이션 파형에서 모든 신호를 볼 수 있도록 보존합니다 (디버깅
-              필수).</li>
+            <li><code>vopt</code>: <strong>Visualizer 최적화</strong>. <code>-o opt -debug +designfile</code> 옵션으로 디버그 정보가
+              포함된 최적화 객체를 생성합니다.</li>
+            <li><code>vsim</code>: <code>-qwavedb=+signal</code> 옵션을 사용하여 Visualizer용 고속 시뮬레이션 DB를 생성합니다.</li>
           </ul>
         </div>
       </div>
 
-      <pre><code class="language-makefile"># Makefile for Questasim
+      <pre><code class="language-makefile"># Makefile for Questasim (Visualizer Flow)
 RTL_DIR = ../src
 TB_DIR  = ../tb
 WORK    = work
-# 소스 파일 리스트 파일 (RTL 순서 중요)
 RTL_LIST = ../sim/run.f
+TOP     = tb_top
+OPT     = opt
 
-gui: clean compiled
-	vsim -voptargs=+acc work.tb_top -do "do wave.do"
+# Visualizer GUI (QWaveDB 생성)
+gui: clean compiled optimize
+	vsim $(OPT) -qwavedb=+signal -do "do wave.do"
 
-# 배치 모드
-sim: clean compiled
-	vsim -c -voptargs=+acc work.tb_top -do "run -all; quit"
+# Batch Simulation
+sim: clean compiled optimize
+	vsim -c $(OPT) -qwavedb=+signal -do "run -all; quit"
+
+optimize:
+	# vopt: Optimize & Debug options (+designfile for Visualizer)
+	vopt $(WORK).$(TOP) -o $(OPT) -debug +designfile -L $(WORK)
 
 compiled:
 	vlib $(WORK)
 	vmap work $(WORK)
-	# -f 옵션: 파일 리스트를 읽어서 순서대로 컴파일 (와일드카드보다 권장됨)
 	vlog -work $(WORK) +incdir+$(RTL_DIR) -f $(RTL_LIST)
-	vlog -work $(WORK) +incdir+$(TB_DIR) $(TB_DIR)/tb_top.v
+	vlog -work $(WORK) +incdir+$(TB_DIR) $(TB_DIR)/$(TOP).v
 
 clean:
-	rm -rf $(WORK) transcript vsim.wlf</code></pre>
+	rm -rf $(WORK) transcript vsim.wlf qwave.db visualizer.log</code></pre>
 
       <div class="note-box">
         <i data-lucide="file-text"></i>
