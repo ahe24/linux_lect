@@ -7,7 +7,8 @@
   --accent-color: #58a6ff;
   --accent-glow: rgba(88, 166, 255, 0.4);
   --success-color: #2ea043;
-  --vim-green: #98c379; /* Solarized/Gruvbox hint */
+  --vim-green: #98c379;
+  /* Solarized/Gruvbox hint */
   --cmd-bg: #000000;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
@@ -106,8 +107,15 @@ main {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h1 {
@@ -213,7 +221,7 @@ pre code {
 /* Shortcuts Grid */
 .shortcut-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 }
@@ -226,6 +234,7 @@ pre code {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  white-space: nowrap;
 }
 
 .kbd-group {
@@ -247,4 +256,65 @@ pre code {
   display: flex;
   justify-content: space-between;
   z-index: 10;
+}
+/* Mobile Menu Toggle Button */
+#menu-toggle {
+  display: none; /* Hidden on desktop */
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 200;
+  background-color: var(--panel-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  /* Sidebar handling */
+  aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    width: 280px;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.8);
+  }
+
+  /* Show sidebar when active class added */
+  aside.active {
+    transform: translateX(0);
+  }
+
+  /* Show toggle button */
+  #menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Adjust Main Content */
+  main {
+    padding: 4rem 1.5rem 2rem 1.5rem; /* More top padding for button, less side padding */
+    width: 100%;
+  }
+
+  /* Adjust Status Bar */
+  .status-bar {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  /* Adjust Status Bar items for small screens */
+  .status-bar span:nth-child(2), /* pos */
+  .status-bar span:nth-child(3) { /* file */
+      display: none; /* Too simpler for mobile */
+  }
 }

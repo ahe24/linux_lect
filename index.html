@@ -1,88 +1,98 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FPGA Linux & VIM Master Class</title>
-    <link rel="stylesheet" href="./style.css" />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Highlight.js Theme -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
-  </head>
-  <body>
-    <aside>
-      <div class="brand">
-        <i data-lucide="cpu"></i>
-        <span>FPGA.env</span>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FPGA Linux & VIM Master Class</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+  <!-- Highlight.js Theme -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+</head>
+
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button id="menu-toggle" aria-label="Toggle Menu">
+    <i data-lucide="menu"></i>
+  </button>
+
+  <aside>
+    <div class="brand">
+      <i data-lucide="cpu"></i>
+      <span>FPGA.env</span>
+    </div>
+    <nav>
+      <ul>
+        <li class="nav-item active" data-target="home">
+          <i data-lucide="home"></i> Home
+        </li>
+        <li class="nav-item" data-target="linux-setup">
+          <i data-lucide="terminal-square"></i> Rocky 9 Setup
+        </li>
+        <li class="nav-item" data-target="server-ops">
+          <i data-lucide="server"></i> Server Ops
+        </li>
+        <li class="nav-item" data-target="vim-mastery">
+          <i data-lucide="pencil-ruler"></i> VIM Mastery
+        </li>
+        <li class="nav-item" data-target="fpga-workflow">
+          <i data-lucide="workflow"></i> FPGA Simulation Workflow
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- HOME SECTION -->
+    <section id="home" class="content-section active">
+      <h1>FPGA 엔지니어를 위한 Linux & VIM</h1>
+      <p>환영합니다. 이 가이드는 FPGA 개발을 위한 최적의 리눅스 환경 구축과 VIM 에디터 활용법을 다룹니다.</p>
+
+      <div class="note-box">
+        <i data-lucide="info"></i>
+        <div>
+          <strong>왜 리눅스인가요?</strong><br />
+          EDA 툴(Vivado, Questasim, Quartus)은 리눅스 환경에서 최고의 안정성과 성능을 발휘합니다. 특히 대규모 시뮬레이션과 서버 기반의 워크플로우는 리눅스 지식을 필수로 요구합니다.
+        </div>
       </div>
-      <nav>
-        <ul>
-          <li class="nav-item active" data-target="home">
-            <i data-lucide="home"></i> Home
-          </li>
-          <li class="nav-item" data-target="linux-setup">
-            <i data-lucide="terminal-square"></i> Rocky 9 Setup
-          </li>
-          <li class="nav-item" data-target="server-ops">
-            <i data-lucide="server"></i> Server Ops
-          </li>
-          <li class="nav-item" data-target="fpga-workflow">
-            <i data-lucide="workflow"></i> Questasim Flow
-          </li>
-          <li class="nav-item" data-target="vim-mastery">
-            <i data-lucide="pencil-ruler"></i> VIM Mastery
-          </li>
-        </ul>
-      </nav>
-    </aside>
 
-    <main>
-      <!-- HOME SECTION -->
-      <section id="home" class="content-section active">
-        <h1>FPGA 엔지니어를 위한 Linux & VIM</h1>
-        <p>환영합니다. 이 가이드는 FPGA 개발을 위한 최적의 리눅스 환경 구축과 VIM 에디터 활용법을 다룹니다.</p>
-        
-        <div class="note-box">
-          <i data-lucide="info"></i>
-          <div>
-            <strong>왜 리눅스인가요?</strong><br/>
-            EDA 툴(Vivado, Questasim, Quartus)은 리눅스 환경에서 최고의 안정성과 성능을 발휘합니다. 특히 대규모 시뮬레이션과 서버 기반의 워크플로우는 리눅스 지식을 필수로 요구합니다.
-          </div>
+      <h2>커리큘럼 개요</h2>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>Rocky Linux 9 환경 구축</span>
+          <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
         </div>
-
-        <h2>커리큘럼 개요</h2>
-        <div class="shortcut-grid">
-          <div class="shortcut-card">
-            <span>Rocky Linux 9 환경 구축</span>
-            <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
-          </div>
-          <div class="shortcut-card">
-            <span>사용자 및 데이터 권한 관리</span>
-            <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
-          </div>
-          <div class="shortcut-card">
-            <span>Makefile & Questasim</span>
-            <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
-          </div>
-          <div class="shortcut-card">
-            <span>VIM 초고속 편집 기술</span>
-            <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
-          </div>
+        <div class="shortcut-card">
+          <span>사용자 및 데이터 권한 관리</span>
+          <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
         </div>
-      </section>
+        <div class="shortcut-card">
+          <span>VIM Mastery (Pro Level)</span>
+          <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
+        </div>
+        <div class="shortcut-card">
+          <span>FPGA Simulation Workflow</span>
+          <i data-lucide="check-circle" style="color: var(--accent-color)"></i>
+        </div>
+      </div>
+    </section>
 
-      <!-- ROCKY SETUP SECTION -->
-      <section id="linux-setup" class="content-section">
-        <h1>Rocky Linux 9 Setup</h1>
-        <p>엔터프라이즈급 리눅스(RHEL)와 1:1 호환되는 Rocky Linux 9 기반의 EDA 환경 구축입니다.</p>
-        
-        <h2>1. 필수 패키지 설치</h2>
-        <p>FPGA 툴들은 32bit 라이브러리나 특정 시스템 라이브러리를 요구하는 경우가 많습니다.</p>
-        <pre><code class="language-bash"># 시스템 업데이트
+    <!-- ROCKY SETUP SECTION -->
+    <section id="linux-setup" class="content-section">
+      <h1>Rocky Linux 9 Setup</h1>
+      <p>엔터프라이즈급 리눅스(RHEL)와 1:1 호환되는 Rocky Linux 9 기반의 EDA 환경 구축입니다.</p>
+
+      <h2>1. 필수 패키지 설치</h2>
+      <p>FPGA 툴들은 32bit 라이브러리나 특정 시스템 라이브러리를 요구하는 경우가 많습니다.</p>
+      <pre><code class="language-bash"># 시스템 업데이트
 sudo dnf update -y
 
 # 기본 개발 툴 설치
@@ -91,24 +101,24 @@ sudo dnf groupinstall "Development Tools" -y
 # EDA 툴 호환성을 위한 라이브러리 (X11, ncurses 등)
 sudo dnf install -y libX11 libXext libXt libXft ncurses-compat-libs \
     langpacks-ko glibc.i686 libstdc++.i686</code></pre>
-        
-        <h2>2. 네트워크 및 호스트 설정</h2>
-        <p>고정 IP 설정 및 호스트 네임 변경은 라이센스 데몬 구동 시 중요합니다.</p>
-        <pre><code class="language-bash"># 호스트네임 변경
+
+      <h2>2. 네트워크 및 호스트 설정</h2>
+      <p>고정 IP 설정 및 호스트 네임 변경은 라이센스 데몬 구동 시 중요합니다.</p>
+      <pre><code class="language-bash"># 호스트네임 변경
 sudo hostnamectl set-hostname fpga-server-01
 
 # /etc/hosts 파일 수정 (라이센스 서버 등 등록)
 vim /etc/hosts
 # 192.168.1.100  license-server</code></pre>
-      </section>
+    </section>
 
-      <!-- SERVER OPS SECTION -->
-      <section id="server-ops" class="content-section">
-        <h1>Server & User Management</h1>
-        <p>여러 엔지니어가 사용하는 시뮬레이션 서버를 관리하기 위한 필수 명령어입니다.</p>
+    <!-- SERVER OPS SECTION -->
+    <section id="server-ops" class="content-section">
+      <h1>Server & User Management</h1>
+      <p>여러 엔지니어가 사용하는 시뮬레이션 서버를 관리하기 위한 필수 명령어입니다.</p>
 
-        <h2>1. 사용자 추가 및 그룹 관리</h2>
-        <pre><code class="language-bash"># EDA 그룹 생성
+      <h2>1. 사용자 추가 및 그룹 관리</h2>
+      <pre><code class="language-bash"># EDA 그룹 생성
 sudo groupadd eda_users
 
 # 사용자 생성 (홈 디렉토리 포함, bash 쉘 사용, 그룹 지정)
@@ -117,9 +127,9 @@ sudo useradd -m -g eda_users -s /bin/bash engineer01
 # 비밀번호 설정
 sudo passwd engineer01</code></pre>
 
-        <h2>2. 데이터 및 툴 디렉토리 권한</h2>
-        <p>EDA 툴은 보통 <code>/tools</code> 또는 <code>/opt</code>에 설치하며, 공용 라이브러리는 읽기 전용으로 관리합니다.</p>
-        <pre><code class="language-bash"># 디렉토리 생성
+      <h2>2. 데이터 및 툴 디렉토리 권한</h2>
+      <p>EDA 툴은 보통 <code>/tools</code> 또는 <code>/opt</code>에 설치하며, 공용 라이브러리는 읽기 전용으로 관리합니다.</p>
+      <pre><code class="language-bash"># 디렉토리 생성
 sudo mkdir -p /tools/xilinx /tools/mentor
 
 # 소유권 변경 (관리자: root, 그룹: eda_users)
@@ -127,136 +137,196 @@ sudo chown -R root:eda_users /tools
 
 # 권한 설정 (소유자: RWX, 그룹: RX, 기타: RX)
 sudo chmod -R 755 /tools</code></pre>
-      </section>
+    </section>
 
-      <!-- FPGA WORKFLOW SECTION (Questasim & Make) -->
-      <section id="fpga-workflow" class="content-section">
-        <h1>Questasim & Makefile Workflow</h1>
-        <p>GUI를 매번 클릭하는 것은 비효율적입니다. Makefile을 사용하여 시뮬레이션을 자동화합니다.</p>
+    <!-- FPGA WORKFLOW SECTION (Questasim & Make) -->
+    <section id="fpga-workflow" class="content-section">
+      <h1>FPGA Simulation Workflow</h1>
+      <p>FPGA 개발의 꽃은 시뮬레이션입니다. Questasim과 Vivado를 리눅스 터미널(Makefile)에서 제어하는 방법을 마스터하세요.</p>
 
-        <h2>1. 디렉토리 구조 권장안</h2>
-        <p>프로젝트 루트에서 체계적으로 파일을 관리합니다.</p>
-        <pre><code class="language-plaintext">Project_Root/
-├── src/           # Verilog/SystemVerilog RTL 소스
-├── tb/            # Testbench 소스
-├── sim/           # 시뮬레이션 실행 및 결과물이 저장되는 곳
-│   ├── Makefile   # 핵심 자동화 스크립트
-│   ├── wave.do    # 파형 설정 파일
-│   └── run.f      # 파일 리스트
-└── docs/          # 문서</code></pre>
+      <h2>1. Questasim Makefile 완벽 분석</h2>
+      <p>단순히 복사해서 쓰는 것이 아니라, 각 명령어의 의미를 이해해야 에러를 잡을 수 있습니다.</p>
 
-        <h2>2. Makefile 작성 (핵심)</h2>
-        <p>아래 Makefile을 <code>sim/</code> 디렉토리에 생성하여 사용하세요.</p>
-        <pre><code class="language-makefile"># Makefile for Questasim
+      <div class="note-box">
+        <i data-lucide="book-open"></i>
+        <div>
+          <strong>핵심 명령어 설명:</strong>
+          <ul style="list-style: disc; margin-left: 20px; margin-top: 10px;">
+            <li><code>vlib work</code>: 컴파일된 디자인 유닛들이 저장될 물리적인 디렉토리를 생성합니다.</li>
+            <li><code>vmap work work</code>: 논리적인 라이브러리 이름(work)을 물리적 디렉토리에 매핑합니다.</li>
+            <li><code>vlog</code>: Verilog/SystemVerilog 컴파일러. <code>+incdir+</code> 옵션으로 헤더 파일 경로를 지정하는 것이 필수입니다.</li>
+            <li><code>vopt +acc</code>: 코드 최적화를 수행하되, <strong>+acc</strong> 옵션을 통해 시뮬레이션 파형에서 모든 신호를 볼 수 있도록 보존합니다 (디버깅
+              필수).</li>
+          </ul>
+        </div>
+      </div>
 
-# 1. 변수 설정
+      <pre><code class="language-makefile"># Makefile for Questasim
 RTL_DIR = ../src
 TB_DIR  = ../tb
 WORK    = work
+# 소스 파일 리스트 파일 (RTL 순서 중요)
+RTL_LIST = ../sim/run.f
 
-# 2. 타켓 정의
-all: clean compiled sim
+gui: clean compiled
+	vsim -voptargs=+acc work.tb_top -do "do wave.do"
 
-# 라이브러리 생성
-lib:
+# 배치 모드
+sim: clean compiled
+	vsim -c -voptargs=+acc work.tb_top -do "run -all; quit"
+
+compiled:
 	vlib $(WORK)
 	vmap work $(WORK)
-
-# 컴파일 (여기서 파일 리스트나 와일드카드 사용)
-compiled: lib
-	vlog -work $(WORK) +incdir+$(RTL_DIR) $(RTL_DIR)/*.v
+	# -f 옵션: 파일 리스트를 읽어서 순서대로 컴파일 (와일드카드보다 권장됨)
+	vlog -work $(WORK) +incdir+$(RTL_DIR) -f $(RTL_LIST)
 	vlog -work $(WORK) +incdir+$(TB_DIR) $(TB_DIR)/tb_top.v
 
-# 최적화 (vopt)
-optimized: compiled
-	vopt +acc work.tb_top -o tb_top_opt
-
-# 시뮬레이션 실행 (CLI 모드)
-sim: optimized
-	vsim -c tb_top_opt -do "run -all; quit"
-
-# 시뮬레이션 실행 (GUI 모드)
-gui: optimized
-	vsim tb_top_opt -do "do wave.do"
-
-# Clean
 clean:
 	rm -rf $(WORK) transcript vsim.wlf</code></pre>
-        <div class="note-box">
-             <i data-lucide="zap"></i>
-             <div>
-                <strong>Tip:</strong> 터미널에서 <code>make gui</code>만 입력하면 컴파일부터 시뮬레이터 실행까지 한 번에 완료됩니다.
-             </div>
+
+      <div class="note-box">
+        <i data-lucide="file-text"></i>
+        <div>
+          <strong>run.f 파일 예시:</strong><br />
+          와일드카드(*.v)는 파일 로드 순서를 보장하지 않습니다. 상위 모듈이 하위 모듈보다 먼저 오지 않도록, 파일 리스트에서 의존성 순서대로 명시하는 것이 정석입니다.
+          <pre><code class="language-plaintext" style="margin-top: 10px; background: #000; padding: 10px;">// 주석 가능
+../src/defines.v
+../src/alu.v
+../src/cpu_top.v
+</code></pre>
         </div>
-      </section>
+      </div>
 
-      <!-- VIM MASTERY SECTION -->
-      <section id="vim-mastery" class="content-section">
-        <h1>VIM Mastery</h1>
-        <p>FPGA 엔지니어는 수천 라인의 코드를 다룹니다. 마우스에 손이 가는 순간 시간은 낭비됩니다.</p>
+      <h2>2. Vivado 배포/합성 자동화 (Batch Mode)</h2>
+      <p>Vivado에서도 파일 리스트(sources.f)를 Tcl로 파싱하여 관리하는 것이 유지보수에 좋습니다.</p>
+      <pre><code class="language-makefile"># Makefile for Vivado
+bitstream: 
+	vivado -mode batch -source run_synth.tcl</code></pre>
 
-        <h2>1. VIM의 핵심 철학: Modes</h2>
-        <p>VIM은 항상 <strong>Normal Mode</strong>(<span class="key">Esc</span>)에서 시작합니다. 입력할 때만 <strong>Insert Mode</strong>(<span class="key">i</span>)로 진입하세요.</p>
+      <h3>예시: run_synth.tcl (파일 리스트 읽기)</h3>
+      <pre><code class="language-tcl"># run_synth.tcl
+create_project -in_memory -part xc7a35ticsg324-1L
 
-        <h2>2. 필수 이동 (Navigation)</h2>
-        <div class="shortcut-grid">
-            <div class="shortcut-card">
-                <span>왼쪽 / 아래 / 위 / 오른쪽</span>
-                <span class="kbd-group"><span class="key">h</span><span class="key">j</span><span class="key">k</span><span class="key">l</span></span>
-            </div>
-            <div class="shortcut-card">
-                <span>단어 단위 이동 (앞/뒤)</span>
-                <span class="kbd-group"><span class="key">w</span><span class="key">b</span></span>
-            </div>
-            <div class="shortcut-card">
-                <span>라인 시작 / 끝</span>
-                <span class="kbd-group"><span class="key">0</span><span class="key">$</span></span>
-            </div>
-            <div class="shortcut-card">
-                <span>파일 시작 / 끝</span>
-                <span class="kbd-group"><span class="key">gg</span><span class="key">G</span></span>
-            </div>
+# 파일 리스트 읽기 함수
+set fp [open "sources.f" r]
+set file_data [read $fp]
+close $fp
+
+# 라인별로 읽어서 read_verilog 실행
+foreach line [split $file_data "\n"] {
+    # 빈 줄이나 주석(#) 제외
+    if {[string length $line] > 0 && ![string match "#*" $line]} {
+        read_verilog $line
+    }
+}
+
+read_xdc ../const/pins.xdc
+
+synth_design -top top_module -part xc7a35ticsg324-1L
+opt_design
+place_design
+route_design
+write_bitstream -force ./build_output/final.bit</code></pre>
+    </section>
+
+    <!-- VIM MASTERY SECTION -->
+    <section id="vim-mastery" class="content-section">
+      <h1>VIM Mastery: Pro Level</h1>
+      <p>기본 이동을 넘어서, 코딩 속도를 2배로 올려줄 고급 기능들입니다.</p>
+
+      <h2>1. 다중 창 활용 (Window Splits)</h2>
+      <p>Testbench와 RTL 코드를 동시에 띄워놓고 비교할 때 필수입니다.</p>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>세로 분할 (Vertical Split)</span>
+          <span class="kbd-group"><span class="key">:</span><span>vsp 파일명</span></span>
         </div>
-
-        <h2>3. 편집 (Editing)</h2>
-        <div class="shortcut-grid">
-            <div class="shortcut-card">
-                <span>한 줄 삭제 (Cut)</span>
-                <span class="key">dd</span>
-            </div>
-            <div class="shortcut-card">
-                <span>한 줄 복사 (Yank)</span>
-                <span class="key">yy</span>
-            </div>
-            <div class="shortcut-card">
-                <span>붙여넣기</span>
-                <span class="key">p</span>
-            </div>
-            <div class="shortcut-card">
-                <span>실행 취소 (Undo)</span>
-                <span class="key">u</span>
-            </div>
+        <div class="shortcut-card">
+          <span>가로 분할 (Horizontal Split)</span>
+          <span class="kbd-group"><span class="key">:</span><span>sp 파일명</span></span>
         </div>
-        
-        <h2>4. Verilog 코딩 필살기 (Visual Block)</h2>
-        <p>여러 포트(Port)의 타입이나 이름을 동시에 수정할 때 강력합니다.</p>
-        <p><code>wire [7:0] data_a;<br>wire [7:0] data_b;</code> 형태의 코드를 <code>reg</code>로 바꿀 때:</p>
-        <ol style="margin-left: 20px; line-height: 2;">
-            <li><span class="key">Ctrl</span> + <span class="key">v</span> (Visual Block 모드 진입)</li>
-            <li><span class="key">j</span> 또는 <span class="key">k</span> 로 여러 줄 선택</li>
-            <li><span class="key">c</span> (Change) 또는 <span class="key">d</span> (Delete) 입력</li>
-            <li>동시에 수정됨. 수정 후 <span class="key">Esc</span> 누르면 모든 줄에 반영.</li>
-        </ol>
-      </section>
+        <div class="shortcut-card">
+          <span>창 간 이동</span>
+          <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">w</span>, <span
+              class="key">w</span></span>
+        </div>
+        <div class="shortcut-card">
+          <span>현재 창 닫기</span>
+          <span class="kbd-group"><span class="key">:</span><span>q</span></span>
+        </div>
+      </div>
 
-    </main>
-    
-    <div class="status-bar">
-        <span>MODE: NORMAL</span>
-        <span>pos: 1,1</span>
-        <span>file: linux_lect_v1.0</span>
-    </div>
+      <h2>2. 검색 및 일괄 치환 (Search & Replace)</h2>
+      <p>변수명을 한 번에 바꿀 때 유용합니다. Verilog 리팩토링의 핵심입니다.</p>
+      <pre><code class="language-bash"># 기본 검색 (Normal Mode)
+/clk_en      # 아래로 'clk_en' 검색
+?reset_n     # 위로 'reset_n' 검색
+n / N        # 다음 / 이전 찾기
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+# 단어 바로 찾기
+*            # 커서가 위치한 단어를 즉시 검색
+
+# 치환 (Substitute)
+# 문법: :[범위]s/찾을단어/바꿀단어/[플래그]
+
+# 1. 파일 전체 치환 ('%'는 전체 파일을 의미)
+:%s/wire/reg/g       # 파일의 첫 줄부터 끝 줄까지 모든 'wire' 변경
+
+# 2. 현재 줄만 치환 ('%' 생략 시 커서가 있는 줄만 대상)
+:s/wire/reg/g        # 현재 커서가 있는 줄의 'wire'만 변경
+
+# 3. 특정 범위 지정
+:10,20s/wire/reg/g   # 10번 줄부터 20번 줄까지만 변경
+
+# Tip: 'g' (global) 플래그를 빼면 각 줄의 첫 번째 일치 항목만 바뀝니다.
+# :%s/old/new        # (각 줄의 첫 번째 'old'만 'new'로 변경)</code></pre>
+
+      <h2>3. 매크로 (Macros): 반복 작업 자동화</h2>
+      <p>규칙적인 노가다성 코드 수정(예: 100개의 포트 연결)을 자동화합니다.</p>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li><strong>녹화 시작:</strong> Normal Mode에서 <span class="key">q</span> 누르고 레지스터 키(예: <span class="key">a</span>)
+          누름 &rarr; 상태바에 <code>recording @a</code> 표시됨.</li>
+        <li><strong>작업 수행:</strong> 반복할 작업을 1회 수행 (예: 줄 끝에 콤마 찍고 아래로 이동).</li>
+        <li><strong>녹화 종료:</strong> <span class="key">q</span> 다시 누름.</li>
+        <li><strong>실행:</strong> <span class="key">@</span><span class="key">a</span> (1회 실행) 또는 <span
+            class="key">100</span><span class="key">@</span><span class="key">a</span> (100회 반복).</li>
+      </ol>
+
+      <h2>4. .vimrc 설정 (엔지니어 필수)</h2>
+      <p>홈 디렉토리의 <code>~/.vimrc</code> 파일에 아래 내용을 추가하여 가독성을 높이세요.</p>
+      <pre><code class="language-plaintext">" 문법 강조
+syntax on
+
+" 줄 번호 표시
+set number
+
+" 자동 들여쓰기 (Verilog 코딩 시 필수)
+set autoindent
+set cindent
+
+" 탭 대신 스페이스 4칸 사용 (팀 코딩 컨벤션)
+set expandtab
+set tabstop=4
+set shiftwidth=4
+
+" 검색 시 대소문자 무시하되, 대문자 섞이면 구분
+set ignorecase
+set smartcase
+
+" 괄호 짝 찾기 하이라이트
+set showmatch</code></pre>
+    </section>
+
+  </main>
+
+  <div class="status-bar">
+    <span>MODE: NORMAL</span>
+    <span>pos: 1,1</span>
+    <span>file: linux_lect_v1.0</span>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>

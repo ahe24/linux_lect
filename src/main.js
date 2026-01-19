@@ -72,4 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 6. Mobile Menu Logic
+  const menuToggle = document.getElementById('menu-toggle');
+
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+  });
+
+  // Close sidebar when clicking a nav item (mobile experience)
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+      }
+      // ... existing navigation logic continues ...
+    });
+  });
+
+  // Close sidebar when clicking outside (on main content)
+  mainEl.addEventListener('click', () => {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
+      sidebar.classList.remove('active');
+    }
+  });
+
 });
