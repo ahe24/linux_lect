@@ -34,6 +34,9 @@
         <li class="nav-item active" data-target="home">
           <i data-lucide="home"></i> Home
         </li>
+        <li class="nav-item" data-target="distro-compare">
+          <i data-lucide="scale"></i> Distro Comparison
+        </li>
         <li class="nav-item" data-target="linux-setup">
           <i data-lucide="terminal-square"></i> Rocky 9 Setup
         </li>
@@ -85,31 +88,214 @@
       </div>
     </section>
 
+    <!-- DISTRO COMPARISON SECTION -->
+    <section id="distro-compare" class="content-section">
+      <h1>Red Hat vs Debian</h1>
+      <p>리눅스 생태계의 양대 산맥인 Red Hat 계열과 Debian 계열의 차이를 명확히 이해하고, 목적에 맞는 OS를 선택하는 것이 중요합니다.</p>
+
+      <h2>1. 주요 계열 비교 (RHEL vs Debian)</h2>
+      <div class="note-box">
+        <i data-lucide="info"></i>
+        <div>
+          <strong>핵심 요약:</strong> 수천 개의 배포판이 있지만, 엔터프라이즈 환경은 <strong>RHEL(Red Hat)</strong>, 사용자 및 개발자 환경은
+          <strong>Debian/Ubuntu</strong>가 주도합니다.
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid var(--border-color);">
+          <thead>
+            <tr style="background-color: var(--secondary-bg); border-bottom: 2px solid var(--border-color);">
+              <th style="padding: 12px; font-weight: 600;">구분</th>
+              <th style="padding: 12px; font-weight: 600; color: #ff6b6b;">Red Hat (RHEL) 계열</th>
+              <th style="padding: 12px; font-weight: 600; color: #4ecdc4;">Debian 계열</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600;">주요 배포판</td>
+              <td style="padding: 12px;">RHEL, CentOS, Rocky, Fedora</td>
+              <td style="padding: 12px;">Ubuntu, Debian, Kali, Mint</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600;">패키지 포맷</td>
+              <td style="padding: 12px;">.rpm</td>
+              <td style="padding: 12px;">.deb</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600;">패키지 관리자</td>
+              <td style="padding: 12px;">yum, dnf</td>
+              <td style="padding: 12px;">apt, apt-get</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600;">특징 & 철학</td>
+              <td style="padding: 12px;">보수적 업데이트, 강력한 보안/안정성,<br>기업용 서버 표준</td>
+              <td style="padding: 12px;">빠른 업데이트, 방대한 패키지,<br>개발자/데스크탑 친화적</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>2. 필수 명령어 차이점</h2>
+      <p>가장 자주 사용하는 패키지 관리 명령어를 비교합니다.</p>
+
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>설치 (Install)</span>
+          <div style="margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+            <div style="color: #ff6b6b; margin-bottom: 4px;">dnf install [pkg]</div>
+            <div style="color: #4ecdc4;">apt install [pkg]</div>
+          </div>
+        </div>
+        <div class="shortcut-card">
+          <span>업데이트 (Update)</span>
+          <div style="margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+            <div style="color: #ff6b6b; margin-bottom: 4px;">dnf update</div>
+            <div style="color: #4ecdc4;">apt upgrade</div>
+          </div>
+        </div>
+        <div class="shortcut-card">
+          <span>삭제 (Remove)</span>
+          <div style="margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+            <div style="color: #ff6b6b; margin-bottom: 4px;">dnf remove [pkg]</div>
+            <div style="color: #4ecdc4;">apt remove [pkg]</div>
+          </div>
+        </div>
+        <div class="shortcut-card">
+          <span>검색 (Search)</span>
+          <div style="margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+            <div style="color: #ff6b6b; margin-bottom: 4px;">dnf search [pkg]</div>
+            <div style="color: #4ecdc4;">apt search [pkg]</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>3. 시스템 설정 경로 차이</h2>
+      <p>초기 서버 세팅 시 가장 많이 건드리는 파일 경로입니다.</p>
+
+      <h3>네트워크 설정 (Network Config)</h3>
+      <ul style="list-style: disc; margin-left: 20px; line-height: 1.8;">
+        <li>
+          <strong>Red Hat 계열:</strong> <code>/etc/sysconfig/network-scripts/</code> 디렉토리에 <code>ifcfg-eth0</code> 형태로
+          존재.<br>
+          <span style="font-size: 0.9em; opacity: 0.7;">(최근 Rocky 9 등에서는 NetworkManager 사용 권장)</span>
+        </li>
+        <li>
+          <strong>Debian 계열:</strong> <code>/etc/network/interfaces</code> 파일 또는 <code>/etc/netplan/*.yaml</code>
+          (Ubuntu) 사용.
+        </li>
+      </ul>
+
+      <h3 style="margin-top: 20px;">서비스 관리 (Service)</h3>
+      <p>과거에는 <code>service</code> vs <code>systemctl</code>의 차이가 있었으나, 현재는 대부분 <strong>Systemd</strong>로 통일되었습니다.</p>
+      <pre><code class="language-bash"># 서비스 시작 (공통)
+sudo systemctl start sshd
+
+# 부팅 시 자동 실행 설정 (공통)
+sudo systemctl enable sshd</code></pre>
+
+      <div class="note-box">
+        <i data-lucide="check-circle"></i>
+        <div>
+          <strong>FPGA 엔지니어라면?</strong><br>
+          EDA 툴(Synopsys, Cadence, Xilinx)은 공식적으로 <strong>RHEL/CentOS</strong>를 지원합니다. 따라서 FPGA/ASIC 리눅스 서버를 구축할 때는 고민하지
+          말고 Rocky Linux (RHEL 호환)를 선택하세요.
+        </div>
+      </div>
+    </section>
+
     <!-- ROCKY SETUP SECTION -->
     <section id="linux-setup" class="content-section">
-      <h1>Rocky Linux 9 Setup</h1>
-      <p>엔터프라이즈급 리눅스(RHEL)와 1:1 호환되는 Rocky Linux 9 기반의 EDA 환경 구축입니다.</p>
+      <h1>Rocky Linux 9 for EDA Server</h1>
+      <p>단순한 OS 설치를 넘어, 수천만 원짜리 EDA 툴이 돌아가는 <strong>엔터프라이즈급 서버 구축 노하우</strong>를 공유합니다.</p>
 
-      <h2>1. 필수 패키지 설치</h2>
-      <p>FPGA 툴들은 32bit 라이브러리나 특정 시스템 라이브러리를 요구하는 경우가 많습니다.</p>
-      <pre><code class="language-bash"># 시스템 업데이트
-sudo dnf update -y
+      <h2>1. 파티션 및 파일시스템 전략</h2>
+      <p>OS 재설치 시에도 데이터와 툴을 보호하기 위해 물리적/논리적 파티션 분리는 필수입니다.</p>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>/ (Root)</span>
+          <span style="font-size: 0.9em; opacity: 0.8;">OS 시스템 영역. 50GB~100GB 권장.</span>
+        </div>
+        <div class="shortcut-card">
+          <span>/tools</span>
+          <span style="font-size: 0.9em; opacity: 0.8;">EDA 툴 설치 경로. OS와 완전히 분리 필수.</span>
+        </div>
+        <div class="shortcut-card">
+          <span>/home</span>
+          <span style="font-size: 0.9em; opacity: 0.8;">사용자 데이터. 백업 1순위.</span>
+        </div>
+        <div class="shortcut-card">
+          <span>SWAP</span>
+          <span style="font-size: 0.9em; opacity: 0.8;">PHY 합성 시 RAM 부족 대비. RAM 용량의 0.5배 이상.</span>
+        </div>
+      </div>
 
-# 기본 개발 툴 설치
-sudo dnf groupinstall "Development Tools" -y
+      <h2>2. 필수 의존성 패키지 (Ghost Libraries)</h2>
+      <p>최신 OS(Rocky 9)에 이전 세대 EDA 툴을 설치할 때 발생하는 라이브러리 에러 해결책입니다.</p>
+      <pre><code class="language-bash"># 1. EPEL 저장소 활성화
+sudo dnf install -y epel-release
 
-# EDA 툴 호환성을 위한 라이브러리 (X11, ncurses 등)
-sudo dnf install -y libX11 libXext libXt libXft ncurses-compat-libs \
-    langpacks-ko glibc.i686 libstdc++.i686</code></pre>
+# 2. 필수 시스템 라이브러리 & 개발 툴
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y redhat-lsb-core git wget htop
 
-      <h2>2. 네트워크 및 호스트 설정</h2>
-      <p>고정 IP 설정 및 호스트 네임 변경은 라이센스 데몬 구동 시 중요합니다.</p>
-      <pre><code class="language-bash"># 호스트네임 변경
-sudo hostnamectl set-hostname fpga-server-01
+# 3. EDA 툴 구동을 위한 Legacy 라이브러리 (Crucial!)
+# libnsl: FlexLM 라이센스 데몬이 주로 사용
+# libX*: Vivado/Questasim GUI 구동용
+sudo dnf install -y libnsl libX11 libXext libXft libXtst \
+    ncurses-compat-libs \
+    libstdc++.i686 glibc.i686</code></pre>
 
-# /etc/hosts 파일 수정 (라이센스 서버 등 등록)
-vim /etc/hosts
-# 192.168.1.100  license-server</code></pre>
+      <div class="note-box">
+        <i data-lucide="alert-triangle"></i>
+        <div>
+          <strong>주의: SELinux 및 방화벽</strong><br>
+          FlexLM 라이센스 서버 통신 문제 해결을 위해, 내부망일 경우 SELinux는 <code>Permissive</code>로, 방화벽은 특정 포트(27000~27009)를 개방하거나 비활성화해야
+          할 수 있습니다.
+        </div>
+      </div>
+
+      <h2>3. Environment Modules (Best Practice)</h2>
+      <p>여러 버전의 툴(Vivado 2022, 2024 등)을 <code>.bashrc</code>에 다 넣으면 충돌납니다. <strong>Module</strong> 시스템을 사용하세요.</p>
+
+      <pre><code class="language-bash"># 설치
+sudo dnf install -y environment-modules</code></pre>
+
+      <p>설치 후 사용자는 필요한 버전만 로드해서 깔끔하게 사용 가능합니다.</p>
+      <div class="shortcut-grid">
+        <div class="shortcut-card">
+          <span>사용 가능 툴 확인</span>
+          <span class="kbd-group">module avail</span>
+        </div>
+        <div class="shortcut-card">
+          <span>툴 로드</span>
+          <span class="kbd-group">module load vivado/2023.2</span>
+        </div>
+        <div class="shortcut-card">
+          <span>툴 언로드</span>
+          <span class="kbd-group">module unload vivado</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top:20px;">Modulefile 작성 예시 (/usr/share/Modules/modulefiles/vivado/2023.2)</h3>
+      <pre><code class="language-tcl">#%Module1.0
+proc ModulesHelp { } {
+    puts stderr "Sets up the environment for Vivado 2023.2"
+}
+
+set basedir /tools/Xilinx/Vivado/2023.2
+prepend-path PATH $basedir/bin
+setenv XILINX_VIVADO $basedir</code></pre>
+
+      <h2>4. 다중 사용자 권한 관리 노하우</h2>
+      <p>서버 관리자가 매번 권한을 수정해주지 않으려면 초기 그룹 설정이 중요합니다.</p>
+      <ul style="list-style: disc; margin-left: 20px; line-height: 1.8;">
+        <li><strong>EDA 그룹 생성:</strong> 모든 엔지니어를 <code>eda_users</code> 그룹에 포함.</li>
+        <li><strong>SetGID 비트 설정:</strong> 프로젝트 폴더에 <code>chmod g+s</code>를 걸면, 누가 파일을 생성하든 그룹 권한이 상속되어 서로 수정 가능합니다.
+        </li>
+        <li><strong>umask 설정:</strong> <code>/etc/bashrc</code> 또는 <code>/etc/profile</code>에 <code>umask 002</code>를
+          설정하여 그룹 멤버 간 쓰기 권한을 기본 허용합니다.</li>
+      </ul>
     </section>
 
     <!-- SERVER OPS SECTION -->
