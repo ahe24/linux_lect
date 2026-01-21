@@ -40,22 +40,18 @@ npm run build
 ```
 
 ### Step 3: 호스트/포트 설정
-`ecosystem.config.js` 파일에서 포트를 변경할 수 있습니다.
-기본값은 `5173` 입니다.
+`.env` 파일을 생성하여 포트를 설정합니다.
 
-```javascript
-// ecosystem.config.js
-module.exports = {
-  apps: [
-    {
-      name: "fpga-linux-lect",
-      // ...
-      args: "-s dist -l 5173", // 여기를 8080 등으로 변경 가능
-      // ...
-    }
-  ]
-};
+```bash
+# 템플릿 복사
+cp .env.template .env
+
+# .env 파일 수정 (원하는 포트로 변경, 예: 8080)
+# 예: PORT=8080
+vi .env
 ```
+
+`ecosystem.config.cjs`는 `.env` 파일의 `PORT` 값을 자동으로 로드합니다.
 
 ### Step 4:서비스 시작 (PM2)
 ```bash

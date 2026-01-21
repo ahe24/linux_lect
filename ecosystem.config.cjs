@@ -1,18 +1,19 @@
+require('dotenv').config();
+
+const port = process.env.PORT || 5173;
+
 module.exports = {
     apps: [
         {
             name: "fpga-linux-lect",
-            script: "serve",
+            script: "./node_modules/serve/build/main.js",
             env: {
                 PM2_SERVE_PATH: '.',
-                PM2_SERVE_PORT: 5173,
+                PM2_SERVE_PORT: port,
                 PM2_SERVE_SPA: 'true',
                 PM2_SERVE_HOMEPAGE: '/index.html'
             },
-            // Using the 'server' package command usually implies invoking the binary.
-            // However, a more robust way with 'serve' package is:
-            script: "./node_modules/serve/build/main.js",
-            args: "-s dist -l 5173",
+            args: `-s dist -l ${port}`,
             instances: 1,
             autorestart: true,
             watch: false,
@@ -20,3 +21,4 @@ module.exports = {
         }
     ]
 };
+
