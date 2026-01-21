@@ -205,13 +205,13 @@ RTL_LIST = ../sim/run.f
 TOP     = tb_top
 OPT     = opt
 
-# Visualizer GUI (QWaveDB 생성)
+# Visualizer GUI Live Simulation (with QWaveDB)
 gui: clean compiled optimize
-	vsim $(OPT) -qwavedb=+signal -do "do wave.do"
+	vsim $(OPT) -visualizer -qwavedb=+signal -do "run 10 us"
 
-# Batch Simulation
+# Batch / Post simulation mode
 sim: clean compiled optimize
-	vsim -c $(OPT) -qwavedb=+signal -do "run -all; quit"
+	vsim -batch $(OPT) -qwavedb=+signal -do "run -all; quit"
 
 optimize:
 	# vopt: Optimize & Debug options (+designfile for Visualizer)
