@@ -1,0 +1,101 @@
+<section id="fpga-workflow" class="content-section">
+    <h1>FPGA Simulation Workflow</h1>
+    <p>FPGA 개발의 꽃은 시뮬레이션입니다. Questasim과 Vivado를 리눅스 터미널(Makefile)에서 제어하는 방법을 마스터하세요.</p>
+
+    <h2>1. Questasim Makefile 완벽 분석</h2>
+    <p>단순히 복사해서 쓰는 것이 아니라, 각 명령어의 의미를 이해해야 에러를 잡을 수 있습니다.</p>
+
+    <div class="note-box">
+        <i data-lucide="book-open"></i>
+        <div>
+            <strong>핵심 명령어 설명:</strong>
+            <ul style="list-style: disc; margin-left: 20px; margin-top: 10px;">
+                <li><code>vlib work</code>: 컴파일된 디자인 유닛들이 저장될 물리적인 디렉토리를 생성합니다.</li>
+                <li><code>vmap work work</code>: 논리적인 라이브러리 이름(work)을 물리적 디렉토리에 매핑합니다.</li>
+                <li><code>vlog</code>: Verilog/SystemVerilog 컴파일러. <code>+incdir+</code> 옵션으로 헤더 파일 경로를 지정하는 것이 필수입니다.
+                </li>
+                <li><code>vopt</code>: <strong>Visualizer 최적화</strong>. <code>-o opt -debug +designfile</code> 옵션으로 디버그
+                    정보가
+                    포함된 최적화 객체를 생성합니다.</li>
+                <li><code>vsim</code>: <code>-qwavedb=+signal</code> 옵션을 사용하여 Visualizer용 고속 시뮬레이션 DB를 생성합니다.</li>
+            </ul>
+        </div>
+    </div>
+
+    <pre><code class="language-makefile"># Makefile for Questasim (Visualizer Flow)
+RTL_DIR = ../src
+TB_DIR  = ../tb
+WORK    = work
+RTL_LIST = ../sim/run.f
+TOP     = tb_top
+OPT     = opt
+
+# Visualizer GUI Live Simulation (with QWaveDB)
+gui: clean compiled optimize
+	vsim $(OPT) -visualizer -qwavedb=+signal -do "run 10 us"
+
+# Batch / Post simulation mode
+sim: clean compiled optimize
+	vsim -batch $(OPT) -qwavedb=+signal -do "run -all; quit"
+
+optimize:
+	# vopt: Optimize & Debug options (+designfile for Visualizer)
+	vopt $(WORK).$(TOP) -o $(OPT) -debug +designfile -L $(WORK)
+
+compiled:
+	vlib $(WORK)
+	vmap work $(WORK)
+	vlog -work $(WORK) +incdir+$(RTL_DIR) -f $(RTL_LIST)
+	vlog -work $(WORK) +incdir+$(TB_DIR) $(TB_DIR)/$(TOP).v
+
+# load wave database for visualizer
+wave: 
+	vis design.bin qwave.db &
+
+clean:
+	rm -rf $(WORK) transcript vsim.wlf qwave.db visualizer.log</code></pre>
+
+    <div class="note-box">
+        <i data-lucide="file-text"></i>
+        <div>
+            <strong>run.f 파일 예시:</strong><br />
+            와일드카드(*.v)는 파일 로드 순서를 보장하지 않습니다. 상위 모듈이 하위 모듈보다 먼저 오지 않도록, 파일 리스트에서 의존성 순서대로 명시하는 것이 정석입니다.
+            <pre><code class="language-plaintext" style="margin-top: 10px; background: #000; padding: 10px;">// 주석 가능
+../src/defines.v
+../src/alu.v
+../src/cpu_top.v
+</code></pre>
+        </div>
+    </div>
+
+    <h2>2. Vivado 배포/합성 자동화 (Batch Mode)</h2>
+    <p>Vivado에서도 파일 리스트(sources.f)를 Tcl로 파싱하여 관리하는 것이 유지보수에 좋습니다.</p>
+    <pre><code class="language-makefile"># Makefile for Vivado
+bitstream: 
+	vivado -mode batch -source run_synth.tcl</code></pre>
+
+    <h3>예시: run_synth.tcl (파일 리스트 읽기)</h3>
+    <pre><code class="language-tcl"># run_synth.tcl
+create_project -in_memory -part xc7a35ticsg324-1L
+
+# 파일 리스트 읽기 함수
+set fp [open "sources.f" r]
+set file_data [read $fp]
+close $fp
+
+# 라인별로 읽어서 read_verilog 실행
+foreach line [split $file_data "\n"] {
+    # 빈 줄이나 주석(#) 제외
+    if {[string length $line] > 0 && ![string match "#*" $line]} {
+        read_verilog $line
+    }
+}
+
+read_xdc ../const/pins.xdc
+
+synth_design -top top_module -part xc7a35ticsg324-1L
+opt_design
+place_design
+route_design
+write_bitstream -force ./build_output/final.bit</code></pre>
+</section>

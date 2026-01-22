@@ -4,12 +4,24 @@ import bash from 'highlight.js/lib/languages/bash';
 import makefile from 'highlight.js/lib/languages/makefile';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 
+// Import HTML Fragments
+import homeHtml from './sections/home.html?raw';
+import distroHtml from './sections/distro-compare.html?raw';
+import setupHtml from './sections/linux-setup.html?raw';
+import serverOpsHtml from './sections/server-ops.html?raw';
+import workflowHtml from './sections/fpga-workflow.html?raw';
+import vimHtml from './sections/vim-mastery.html?raw';
+
 // Register languages
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('makefile', makefile);
 hljs.registerLanguage('plaintext', plaintext);
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 0. Inject Content
+  const mainComponent = document.querySelector('main');
+  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + workflowHtml + vimHtml;
+
   // 1. Initialize Icons
   createIcons({ icons });
 
@@ -35,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sec.id === targetId) {
           sec.classList.add('active');
           // Reset scroll
-          document.querySelector('main').scrollTop = 0;
+          mainComponent.scrollTop = 0;
 
           // Re-trigger animation
           sec.style.animation = 'none';
@@ -47,28 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 4. Status Bar Fun (Scroll Position)
-  const mainEl = document.querySelector('main');
   const statusPos = document.querySelector('.status-bar span:nth-child(2)');
 
-  mainEl.addEventListener('scroll', () => {
-    const percent = Math.round((mainEl.scrollTop / (mainEl.scrollHeight - mainEl.clientHeight)) * 100);
+  mainComponent.addEventListener('scroll', () => {
+    const percent = Math.round((mainComponent.scrollTop / (mainComponent.scrollHeight - mainComponent.clientHeight)) * 100);
     statusPos.textContent = `pos: ${percent}%`;
   });
 
   // 5. Easter Egg: VIM keys interaction
-  // If user presses 'j' or 'k' and is not in an input, scroll content?
-  // Let's implement basic j/k scrolling for the authentic feel.
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
     if (e.key === 'j') {
-      mainEl.scrollBy({ top: 50, behavior: 'smooth' });
+      mainComponent.scrollBy({ top: 50, behavior: 'smooth' });
     } else if (e.key === 'k') {
-      mainEl.scrollBy({ top: -50, behavior: 'smooth' });
+      mainComponent.scrollBy({ top: -50, behavior: 'smooth' });
     } else if (e.key === 'g' && !e.repeat) {
       // Simple 'gg' detection could be complex, let's just do 'G' (Shift+g)
     } else if (e.key === 'G') {
-      mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
+      mainComponent.scrollTo({ top: mainComponent.scrollHeight, behavior: 'smooth' });
     }
   });
 
@@ -85,12 +94,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.innerWidth <= 768) {
         sidebar.classList.remove('active');
       }
-      // ... existing navigation logic continues ...
     });
   });
 
   // Close sidebar when clicking outside (on main content)
-  mainEl.addEventListener('click', () => {
+  mainComponent.addEventListener('click', () => {
     if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
       sidebar.classList.remove('active');
     }

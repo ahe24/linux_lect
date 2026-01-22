@@ -1,0 +1,203 @@
+<section id="vim-mastery" class="content-section">
+    <h1>VIM Mastery: Pro Level</h1>
+    <p>기본 이동을 넘어서, 코딩 속도를 2배로 올려줄 고급 기능들입니다.</p>
+
+    <h2>1. 기본 이동 및 편집 (Essentials)</h2>
+    <p>마우스에 손이 가는 순간 패배입니다. 키보드 홈 포지션에서 모든 것을 해결하세요.</p>
+
+    <h3>커서 이동 (Movement)</h3>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>기본 이동</span>
+            <span class="kbd-group"><span class="key">h</span><span class="key">j</span><span class="key">k</span><span
+                    class="key">l</span> (좌/하/상/우)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>단어 단위 이동 (점프)</span>
+            <span class="kbd-group"><span class="key">w</span> (다음), <span class="key">b</span> (이전)</span>
+        </div>
+    </div>
+
+    <h3 style="margin-top:20px;">선택과 편집 (Visual & Edit)</h3>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>텍스트 선택 (Visual Mode)</span>
+            <span class="kbd-group"><span class="key">v</span> + 이동 &rarr; 선택</span>
+        </div>
+        <div class="shortcut-card">
+            <span>복사 / 붙여넣기</span>
+            <span class="kbd-group"><span class="key">y</span> (Yank), <span class="key">p</span> (Paste)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>잘라내기 (삭제)</span>
+            <span class="kbd-group"><span class="key">d</span> (Delete/Cut)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>되돌리기 (Undo/Redo)</span>
+            <span class="kbd-group"><span class="key">u</span> / <span class="key">Ctrl</span>+<span
+                    class="key">r</span></span>
+        </div>
+    </div>
+
+    <h2>2. 파일 조작 및 쉘 전환 (File Ops & Shell)</h2>
+    <p>가장 기초적인 파일 열기, 저장, 종료 방법과 작업 중 잠시 쉘로 나가는 방법입니다.</p>
+
+    <h3>파일 열기 및 저장/종료</h3>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>파일 열기</span>
+            <span class="kbd-group"><span class="key">vim</span><span>파일명</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>저장하기</span>
+            <span class="kbd-group"><span class="key">:</span><span>w</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>저장하고 종료</span>
+            <span class="kbd-group"><span class="key">:</span><span>wq</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>강제 종료 (저장X)</span>
+            <span class="kbd-group"><span class="key">:</span><span>q!</span></span>
+        </div>
+    </div>
+
+    <h3>잠시 쉘로 나가기 (Suspend/Foreground)</h3>
+    <p>편집기를 끄지 않고 터미널 명령어를 써야 할 때(예: git status, 파일 목록 확인) 유용합니다.</p>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>작업 일시 중단 (Suspend)</span>
+            <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">z</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>편집기 복귀 (Foreground)</span>
+            <span class="kbd-group"><span class="key">fg</span></span>
+        </div>
+    </div>
+
+    <h2>3. 비주얼 블록 모드 (Visual Block) - Verilog 필수!</h2>
+    <p>Verilog 포트 리스트나 인스턴스를 연결할 때, <strong>세로로 드래그해서 한 번에 편집</strong>하는 기능입니다. 이것만 알면 작업 속도가 3배 빨라집니다.</p>
+
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>블록 지정 시작</span>
+            <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span>
+        </div>
+        <div class="shortcut-card" style="flex-direction:column; align-items:flex-start; white-space:normal;">
+            <span style="font-weight:bold; margin-bottom:5px;">블록 내 일괄 입력 (Multi Insert)</span>
+            <span class="kbd-group" style="font-size:0.9em"><span class="key">Shift</span>+<span class="key">i</span>
+                &rarr; 입력 &rarr; <span class="key">ESC</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>블록 삭제/복사</span>
+            <span class="kbd-group"><span class="key">x</span> (삭제), <span class="key">y</span> (복사)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>문자열 덮어쓰기</span>
+            <span class="kbd-group"><span class="key">r</span> + <span class="key">문자</span></span>
+        </div>
+    </div>
+
+    <h2>4. 전광석화 코드 탐색 (Navigation)</h2>
+    <p>긴 코드에서 길을 잃지 않으려면 커서 이동 마스터가 되어야 합니다.</p>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>현재 단어 검색 (Highlight)</span>
+            <span class="kbd-group"><span class="key">*</span> (다음), <span class="key">#</span> (이전)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>괄호 짝 찾기 ( { &lt;-&gt; } )</span>
+            <span class="kbd-group"><span class="key">%</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>파일 상/하단 이동</span>
+            <span class="kbd-group"><span class="key">gg</span> (맨위), <span class="key">G</span> (맨아래)</span>
+        </div>
+        <div class="shortcut-card">
+            <span>이전 커서 위치 복귀</span>
+            <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">o</span></span>
+        </div>
+    </div>
+
+    <h2>5. 다중 창 활용 (Window Splits)</h2>
+    <p>Testbench와 RTL 코드를 동시에 띄워놓고 비교할 때 필수입니다.</p>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <span>세로 분할 (Vertical Split)</span>
+            <span class="kbd-group"><span class="key">:</span><span>vsp 파일명</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>가로 분할 (Horizontal Split)</span>
+            <span class="kbd-group"><span class="key">:</span><span>sp 파일명</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>창 간 이동</span>
+            <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">w</span>, <span
+                    class="key">w</span></span>
+        </div>
+        <div class="shortcut-card">
+            <span>현재 창 닫기</span>
+            <span class="kbd-group"><span class="key">:</span><span>q</span></span>
+        </div>
+    </div>
+
+    <h2>6. 검색 및 일괄 치환 (Search & Replace)</h2>
+    <p>변수명을 한 번에 바꿀 때 유용합니다. Verilog 리팩토링의 핵심입니다.</p>
+    <pre><code class="language-bash"># 기본 검색 (Normal Mode)
+/clk_en      # 아래로 'clk_en' 검색
+?reset_n     # 위로 'reset_n' 검색
+n / N        # 다음 / 이전 찾기
+
+# 단어 바로 찾기
+*            # 커서가 위치한 단어를 즉시 검색
+
+# 치환 (Substitute)
+# 문법: :[범위]s/찾을단어/바꿀단어/[플래그]
+
+# 1. 파일 전체 치환 ('%'는 전체 파일을 의미)
+:%s/wire/reg/g       # 파일의 첫 줄부터 끝 줄까지 모든 'wire' 변경
+
+# 2. 현재 줄만 치환 ('%' 생략 시 커서가 있는 줄만 대상)
+:s/wire/reg/g        # 현재 커서가 있는 줄의 'wire'만 변경
+
+# 3. 특정 범위 지정
+:10,20s/wire/reg/g   # 10번 줄부터 20번 줄까지만 변경
+
+# Tip: 'g' (global) 플래그를 빼면 각 줄의 첫 번째 일치 항목만 바뀝니다.
+# :%s/old/new        # (각 줄의 첫 번째 'old'만 'new'로 변경)</code></pre>
+
+    <h2>7. 매크로 (Macros): 반복 작업 자동화</h2>
+    <p>규칙적인 노가다성 코드 수정(예: 100개의 포트 연결)을 자동화합니다.</p>
+    <ol style="margin-left: 20px; line-height: 2;">
+        <li><strong>녹화 시작:</strong> Normal Mode에서 <span class="key">q</span> 누르고 레지스터 키(예: <span class="key">a</span>)
+            누름 &rarr; 상태바에 <code>recording @a</code> 표시됨.</li>
+        <li><strong>작업 수행:</strong> 반복할 작업을 1회 수행 (예: 줄 끝에 콤마 찍고 아래로 이동).</li>
+        <li><strong>녹화 종료:</strong> <span class="key">q</span> 다시 누름.</li>
+        <li><strong>실행:</strong> <span class="key">@</span><span class="key">a</span> (1회 실행) 또는 <span
+                class="key">100</span><span class="key">@</span><span class="key">a</span> (100회 반복).</li>
+    </ol>
+
+    <h2>8. .vimrc 설정 (엔지니어 필수)</h2>
+    <p>홈 디렉토리의 <code>~/.vimrc</code> 파일에 아래 내용을 추가하여 가독성을 높이세요.</p>
+    <pre><code class="language-plaintext">" 문법 강조
+syntax on
+
+" 줄 번호 표시
+set number
+
+" 자동 들여쓰기 (Verilog 코딩 시 필수)
+set autoindent
+set cindent
+
+" 탭 대신 스페이스 4칸 사용 (팀 코딩 컨벤션)
+set expandtab
+set tabstop=4
+set shiftwidth=4
+
+" 검색 시 대소문자 무시하되, 대문자 섞이면 구분
+set ignorecase
+set smartcase
+
+" 괄호 짝 찾기 하이라이트
+set showmatch</code></pre>
+</section>
