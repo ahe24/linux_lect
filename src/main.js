@@ -3,6 +3,7 @@ import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import makefile from 'highlight.js/lib/languages/makefile';
 import plaintext from 'highlight.js/lib/languages/plaintext';
+import verilog from 'highlight.js/lib/languages/verilog';
 
 // Import HTML Fragments
 import homeHtml from './sections/home.html?raw';
@@ -11,16 +12,18 @@ import setupHtml from './sections/linux-setup.html?raw';
 import serverOpsHtml from './sections/server-ops.html?raw';
 import workflowHtml from './sections/fpga-workflow.html?raw';
 import vimHtml from './sections/vim-mastery.html?raw';
+import svHtml from './sections/sv-testbench.html?raw';
 
 // Register languages
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('makefile', makefile);
 hljs.registerLanguage('plaintext', plaintext);
+hljs.registerLanguage('verilog', verilog);
 
 document.addEventListener('DOMContentLoaded', () => {
   // 0. Inject Content
   const mainComponent = document.querySelector('main');
-  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + workflowHtml + vimHtml;
+  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + vimHtml + svHtml + workflowHtml;
 
   // 1. Initialize Icons
   createIcons({ icons });

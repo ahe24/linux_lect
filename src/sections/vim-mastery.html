@@ -167,15 +167,37 @@ n / N        # 다음 / 이전 찾기
 # :%s/old/new        # (각 줄의 첫 번째 'old'만 'new'로 변경)</code></pre>
 
     <h2>7. 매크로 (Macros): 반복 작업 자동화</h2>
-    <p>규칙적인 노가다성 코드 수정(예: 100개의 포트 연결)을 자동화합니다.</p>
-    <ol style="margin-left: 20px; line-height: 2;">
-        <li><strong>녹화 시작:</strong> Normal Mode에서 <span class="key">q</span> 누르고 레지스터 키(예: <span class="key">a</span>)
-            누름 &rarr; 상태바에 <code>recording @a</code> 표시됨.</li>
-        <li><strong>작업 수행:</strong> 반복할 작업을 1회 수행 (예: 줄 끝에 콤마 찍고 아래로 이동).</li>
-        <li><strong>녹화 종료:</strong> <span class="key">q</span> 다시 누름.</li>
-        <li><strong>실행:</strong> <span class="key">@</span><span class="key">a</span> (1회 실행) 또는 <span
-                class="key">100</span><span class="key">@</span><span class="key">a</span> (100회 반복).</li>
-    </ol>
+    <p>포트 리스트의 끝부분 문자를 변경하거나 규칙적인 패턴을 수정할 때 강력합니다.</p>
+
+    <h3>실전 예제: 줄 끝 콤마(,)를 세미콜론(;)으로 바꾸기</h3>
+    <div class="note-box">
+        <i data-lucide="play-circle"></i>
+        <div>
+            <strong>1. 실습용 텍스트 (VIM에 붙여넣으세요):</strong>
+            <pre><code class="language-verilog" style="margin: 10px 0; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;">wire [31:0] cpu_addr_0,
+wire [31:0] cpu_addr_1,
+wire [31:0] cpu_addr_2,
+wire [31:0] cpu_addr_3,
+wire [31:0] cpu_addr_4,</code></pre>
+
+            <strong>2. 매크로 녹화 및 실행 (순서대로 입력):</strong>
+            <ol style="margin-top: 10px; margin-left: 20px; line-height: 1.8;">
+                <li><strong>녹화 시작:</strong> <span class="kbd-group"><span class="key">q</span><span
+                            class="key">a</span></span> (a 레지스터에 기록 시작)</li>
+                <li><strong>작업 수행:</strong>
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li><span class="key">$</span> (줄 맨 끝으로 이동)</li>
+                        <li><span class="key">r</span> <span class="key">;</span> (문자를 ;로 변경)</li>
+                        <li><span class="key">j</span> (아래 줄로 이동)</li>
+                        <li><span class="key">0</span> (줄 맨 앞으로 이동 - 중요!)</li>
+                    </ul>
+                </li>
+                <li><strong>녹화 종료:</strong> <span class="kbd-group"><span class="key">q</span></span></li>
+                <li><strong>반복 실행:</strong> <span class="kbd-group"><span class="key">10</span><span
+                            class="key">@</span><span class="key">a</span></span> (10번 반복)</li>
+            </ol>
+        </div>
+    </div>
 
     <h2>8. .vimrc 설정 (엔지니어 필수)</h2>
     <p>홈 디렉토리의 <code>~/.vimrc</code> 파일에 아래 내용을 추가하여 가독성을 높이세요.</p>

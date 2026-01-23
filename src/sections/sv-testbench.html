@@ -1,0 +1,334 @@
+<section id="sv-testbench" class="content-section">
+    <h1>Practical SV Testbench (for Designers)</h1>
+    <p>UVM과 같은 복잡한 방법론 없이도, <strong>SystemVerilog의 핵심 문법(Task, Fork)</strong>만 활용하면 가독성과 생산성을 10배 높일 수 있습니다.</p>
+
+    <style>
+        /* 폰트 합자(Ligature) 방지: <= 가 특수기호로 변하는 것 방지 */
+        code,
+        pre {
+            font-variant-ligatures: none !important;
+        }
+    </style>
+
+    <h2>1. 지저분한 'Initial' 블록 탈출하기 (Task 활용)</h2>
+    <p>모든 신호 제어를 `initial begin ... end` 안에 때려 넣으면 스파게티 코드가 됩니다. <strong>Task</strong>로 동작을 모듈화하세요.</p>
+    <pre><code class="language-verilog">// 재사용 가능한 쓰기 동작 정의
+task bus_write(input logic [31:0] addr, input logic [31:0] data);
+    begin
+        @ (posedge clk);
+        cs_n     &lt;= 0;
+        rw_n     &lt;= 0; // Write
+        addr_bus &lt;= addr;
+        data_bus &lt;= data;
+        @ (posedge clk);
+        cs_n     &lt;= 1; // End cycle
+    end
+endtask</code></pre>
+
+    <h2>2. 검증의 핵심: Fork-Join 시각화 및 패턴</h2>
+    <p>병렬 프로세스를 제어하는 3가지 방식의 차이점과 <strong>"도대체 언제 쓰는가?"</strong>에 대한 실전 예시입니다.</p>
+
+    <style>
+        .fork-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .fork-table th,
+        .fork-table td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .fork-table th {
+            background: #222;
+            color: #fff;
+            width: 80px;
+        }
+
+        .state-run {
+            background: #2e7d32;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .state-wait {
+            background: #424242;
+            color: #aaa;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .desc-box {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.1em;
+        }
+
+        .code-snippet-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--accent-color);
+            padding: 10px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .code-snippet-title {
+            color: #aaa;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+    </style>
+
+    <!-- Diagram 1: Join -->
+    <div class="desc-box"><i data-lucide="git-merge"></i> 1. fork ... join (모두 끝날 때까지 대기)</div>
+    <table class="fork-table">
+        <tr>
+            <th>Main</th>
+            <td class="state-run">Start</td>
+            <td class="state-wait" colspan="2">Wait (멈춤)</td>
+            <td class="state-run">Resume</td>
+        </tr>
+        <tr>
+            <th>Proc A</th>
+            <td></td>
+            <td class="state-run">Run (10ns)</td>
+            <td>Ends</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Proc B</th>
+            <td></td>
+            <td class="state-run" colspan="2">Run (20ns) ...........</td>
+            <td>Ends</td>
+        </tr>
+    </table>
+    <div class="code-snippet-box">
+        <span class="code-snippet-title">💡 [사용 예시] 다중 포트 동시 제어</span>
+        <p>두 개의 마스터가 동시에 메모리에 접근하는 상황을 테스트할 때 씁니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">fork
+    drive_port_a(); // 10ms 소요
+    drive_port_b(); // 20ms 소요
+join // 가장 늦게 끝나는 B가 끝날 때까지 기다림
+$display("모든 테스트 종료");</code></pre>
+    </div>
+
+
+    <!-- Diagram 2: Join Any -->
+    <div class="desc-box"><i data-lucide="git-branch-plus"></i> 2. fork ... join_any (1등 도착 시 출발)</div>
+    <table class="fork-table">
+        <tr>
+            <th>Main</th>
+            <td class="state-run">Start</td>
+            <td class="state-wait">Wait</td>
+            <td class="state-run" colspan="2">Resume (A 끝나자마자 출발!)</td>
+        </tr>
+        <tr>
+            <th>Proc A</th>
+            <td></td>
+            <td class="state-run">Run (10ns)</td>
+            <td>Ends</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Proc B</th>
+            <td></td>
+            <td class="state-run" colspan="2">Run (20ns) ...........</td>
+            <td>(계속 돔)</td>
+        </tr>
+    </table>
+    <div class="code-snippet-box">
+        <span class="code-snippet-title">💡 [사용 예시] 타임아웃(Watchdog) 구현</span>
+        <p>작업이 완료되거나, 혹은 시간이 초과되거나. 둘 중 하나라도 발생하면 넘어갑니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">fork
+    wait_for_interrupt(); // 언젠가 발생할 인터럽트
+    #10000;               // 10us 타임아웃
+join_any // 인터럽트가 오거나 10us가 지나면 즉시 다음으로 진행
+if (timed_out) $error("Timeout Error!");</code></pre>
+    </div>
+
+    <!-- Diagram 3: Join None -->
+    <div class="desc-box"><i data-lucide="git-branch"></i> 3. fork ... join_none (기다리지 않음)</div>
+    <table class="fork-table">
+        <tr>
+            <th>Main</th>
+            <td class="state-run">Start</td>
+            <td class="state-run" colspan="3">Resume (바로 출발!)</td>
+        </tr>
+        <tr>
+            <th>Proc A</th>
+            <td></td>
+            <td class="state-run">Run (10ns)</td>
+            <td>Ends</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Proc B</th>
+            <td></td>
+            <td class="state-run" colspan="2">Run (20ns) ...........</td>
+            <td>(계속 돔)</td>
+        </tr>
+    </table>
+    <div class="code-snippet-box">
+        <span class="code-snippet-title">💡 [사용 예시] 백그라운드 작업 (클럭, 모니터)</span>
+        <p>메인 시나리오에 영향을 주지 않고 뒤에서 계속 돌아야 하는 작업들입니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">fork
+    forever #5 clk = ~clk; // 클럭 생성 (무한루프)
+    monitor_bus();         // 버스 감시 (무한루프)
+join_none // 기다리지 않음! 바로 아래 리셋 로직 실행
+
+#100 rst_n = 1; // 병렬 프로세스들이 도는 동안 실행됨</code></pre>
+    </div>
+
+    <h2>3. 전체 통합 코드 (DUT + Stimulus + Monitor)</h2>
+    <pre><code class="language-verilog">`timescale 1ns/1ps
+
+module tb_top;
+    logic        clk, rst_n;
+    logic [31:0] addr, wdata, rdata;
+    logic        we, en;
+
+    // DUT 연결
+    my_memory_ctrl u_dut (
+        .clk(clk), .rst_n(rst_n),
+        .addr(addr), .wdata(wdata), .rdata(rdata),
+        .we(we), .en(en)
+    );
+
+    // Driver Task
+    task drive_write(input [31:0] a, input [31:0] d);
+        @ (posedge clk);
+        en    &lt;= 1; 
+        we    &lt;= 1;
+        addr  &lt;= a; 
+        wdata &lt;= d;
+        @ (posedge clk);
+        en    &lt;= 0; 
+        we    &lt;= 0;
+    endtask
+
+    task drive_read(input [31:0] a);
+        @ (posedge clk);
+        en   &lt;= 1; 
+        we   &lt;= 0;
+        addr &lt;= a;
+        @ (posedge clk);
+        en   &lt;= 0;
+    endtask
+
+    // Monitor Task
+    task monitor();
+        forever begin
+            @ (posedge clk);
+            if (en && !we) begin
+                #1; 
+                $display("[MON] Read Addr: %h, Data: %h", addr, rdata);
+            end
+        end
+    endtask
+
+    // Main Scenario
+    initial begin
+        clk = 0; rst_n = 0;
+        en = 0; we = 0; addr = 0; wdata = 0;
+
+        // Background Jobs
+        fork
+            forever #5 clk = ~clk; 
+            monitor();             
+        join_none                  
+
+        #20 rst_n = 1;
+
+        $display("--- Start Test ---");
+        drive_write(32'h100, 32'h1234_5678);
+        drive_write(32'h104, 32'hDEAD_BEEF);
+        
+        #50;
+        drive_read(32'h100);
+        drive_read(32'h104);
+
+        $display("--- Test Done ---");
+        $finish;
+    end
+
+endmodule</code></pre>
+
+    <h2>4. 실전 시나리오 더보기 (Advanced Scenarios)</h2>
+    <p>현업에서 자주 마주치는 패킷 생성과 알고리즘 검증 패턴입니다.</p>
+
+    <div class="code-snippet-box">
+        <span class="code-snippet-title">🎯 시나리오 A: 가변 길이 패킷 생성 (Packet Generator)</span>
+        <p><code>struct</code>와 <code>dynamic array</code>를 활용하면 C언어처럼 직관적으로 패킷을 구성할 수 있습니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">// 패킷 헤더 구조체 정의
+typedef struct packed {
+    logic [7:0] msg_id;
+    logic [7:0] dest_id;
+    logic [7:0] len;
+} header_t;
+
+task gen_and_send_packet();
+    header_t hdr;
+    logic [7:0] payload[]; // 가변 길이 배열 (Dynamic Array)
+
+    // 1. 랜덤 데이터 생성
+    hdr.msg_id  = $urandom;
+    hdr.dest_id = $urandom_range(1, 4); // 1~4번 장치 
+    hdr.len     = $urandom_range(4, 16); // 4~16 바이트
+    
+    // 페이로드 크기 할당 및 랜덤 채우기
+    payload = new[hdr.len];
+    foreach(payload[i]) payload[i] = $urandom;
+
+    // 2. 바이트 단위 전송 (Driver 호출)
+    $display("[GEN] MsgID:%h, Dest:%0d, Len:%0d", hdr.msg_id, hdr.dest_id, hdr.len);
+    
+    send_byte(hdr.msg_id);
+    send_byte(hdr.dest_id);
+    send_byte(hdr.len);
+    
+    foreach(payload[i]) send_byte(payload[i]);
+endtask</code></pre>
+    </div>
+
+    <div class="code-snippet-box">
+        <span class="code-snippet-title">📐 시나리오 B: 복잡한 수치 연산 결과 검증</span>
+        <p>RTL의 Fixed-point(고정소수점) 결과를 SystemVerilog의 <code>real</code>(실수) 타입 정답과 비교하여 오차율을 계산합니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">task check_sine_wave();
+    real expected, result_real, error;
+    logic signed [15:0] dut_out; // Q8.8 포맷 (정수8비트 + 소수8비트)
+
+    for (int i=0; i<360; i+=10) begin
+        // 1. 입력 인가 (각도)
+        drive_angle(i); 
+        
+        // 2. Golden Model 계산 (SystemVerilog 내장 수학함수)
+        // sin 입력은 라디안 단위이므로 변환 필요
+        expected = $sin(i * 3.141592 / 180.0);
+        
+        // 3. DUT 결과 수집 및 변환 (Fixed -> Real)
+        get_dut_result(dut_out);
+        result_real = dut_out / 256.0; // 2^8 = 256.0 으로 나눔
+        
+        // 4. 오차 계산 (절대값)
+        error = result_real - expected;
+        if (error < 0) error = -error;
+        
+        $display("Deg: %3d | Exp: %.4f | Got: %.4f | Err: %.4f", 
+                 i, expected, result_real, error);
+
+        // 허용 오차(Tolerance) 체크
+        if (error > 0.05) 
+            $error("Mismatch occurred! Error too high.");
+    end
+endtask</code></pre>
+    </div>
+
+</section>
