@@ -10,6 +10,7 @@ import homeHtml from './sections/home.html?raw';
 import distroHtml from './sections/distro-compare.html?raw';
 import setupHtml from './sections/linux-setup.html?raw';
 import serverOpsHtml from './sections/server-ops.html?raw';
+import shellHtml from './sections/shell-script.html?raw';
 import workflowHtml from './sections/fpga-workflow.html?raw';
 import vimHtml from './sections/vim-mastery.html?raw';
 import svHtml from './sections/sv-testbench.html?raw';
@@ -23,7 +24,7 @@ hljs.registerLanguage('verilog', verilog);
 document.addEventListener('DOMContentLoaded', () => {
   // 0. Inject Content
   const mainComponent = document.querySelector('main');
-  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + vimHtml + svHtml + workflowHtml;
+  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + shellHtml + vimHtml + svHtml + workflowHtml;
 
   // 1. Initialize Icons
   createIcons({ icons });
