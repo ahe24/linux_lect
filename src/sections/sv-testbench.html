@@ -274,61 +274,121 @@ typedef struct packed {
     logic [7:0] len;
 } header_t;
 
-task gen_and_send_packet();
+// 1. 단일 패킷 생성 및 전송 (데이터만 랜덤)
+task gen_packet(input logic [7:0] id, input logic [7:0] dest, input logic [7:0] len);
     header_t hdr;
-    logic [7:0] payload[]; // 가변 길이 배열 (Dynamic Array)
+    logic [7:0] payload[];
 
-    // 1. 랜덤 데이터 생성
-    hdr.msg_id  = $urandom;
-    hdr.dest_id = $urandom_range(1, 4); // 1~4번 장치 
-    hdr.len     = $urandom_range(4, 16); // 4~16 바이트
+    // 헤더 설정
+    hdr.msg_id  = id;
+    hdr.dest_id = dest;
+    hdr.len     = len;
     
-    // 페이로드 크기 할당 및 랜덤 채우기
+    // 페이로드 랜덤 생성
     payload = new[hdr.len];
     foreach(payload[i]) payload[i] = $urandom;
 
-    // 2. 바이트 단위 전송 (Driver 호출)
-    $display("[GEN] MsgID:%h, Dest:%0d, Len:%0d", hdr.msg_id, hdr.dest_id, hdr.len);
+    // 전송 시작 (패킷 유효 신호 인가)
+    @ (posedge clk);
+    pkt_valid <= 1; // Valid High
+    
+    $display("[PKT] ID:%h -> Dest:%h (Len:%0d)", hdr.msg_id, hdr.dest_id, hdr.len);
     
     send_byte(hdr.msg_id);
     send_byte(hdr.dest_id);
     send_byte(hdr.len);
-    
     foreach(payload[i]) send_byte(payload[i]);
+    
+    @ (posedge clk);
+    pkt_valid <= 0; // Valid Low
+endtask
+
+// 2. 상위 시나리오: 다양한 패킷 인가
+task run_packet_stream();
+    // Case 1: 짧은 패킷
+    gen_packet(8'hA1, 8'h01, 8'd4);
+    
+    // Case 2: 긴 패킷
+    gen_packet(8'hB2, 8'h02, 8'd16);
+    
+    // Case 3: 랜덤 ID로 5회 반복
+    repeat(5) begin
+        gen_packet($urandom, 8'hFF, $urandom_range(4, 8));
+    end
 endtask</code></pre>
     </div>
 
     <div class="code-snippet-box">
-        <span class="code-snippet-title">📐 시나리오 B: 복잡한 수치 연산 결과 검증</span>
-        <p>RTL의 Fixed-point(고정소수점) 결과를 SystemVerilog의 <code>real</code>(실수) 타입 정답과 비교하여 오차율을 계산합니다.</p>
-        <pre style="margin:5px 0;"><code class="language-verilog">task check_sine_wave();
-    real expected, result_real, error;
-    logic signed [15:0] dut_out; // Q8.8 포맷 (정수8비트 + 소수8비트)
+        <span class="code-snippet-title">📐 시나리오 B: 레이더 신호 전력(Energy) 계산 검증</span>
+        <p>복소수 신호(I/Q)의 전력(<code>I² + Q²</code>)을 구하는 DSP 로직을 검증합니다. <strong>out_valid</strong> 신호가 뜰 때만 데이터를 캡처하여 비교하는
+            것이 핵심입니다.</p>
+        <pre style="margin:5px 0;"><code class="language-verilog">// 정답을 저장할 큐 (Scoreboard 역할)
+real expected_q[$]; 
 
-    for (int i=0; i<360; i+=10) begin
-        // 1. 입력 인가 (각도)
-        drive_angle(i); 
-        
-        // 2. Golden Model 계산 (SystemVerilog 내장 수학함수)
-        // sin 입력은 라디안 단위이므로 변환 필요
-        expected = $sin(i * 3.141592 / 180.0);
-        
-        // 3. DUT 결과 수집 및 변환 (Fixed -> Real)
-        get_dut_result(dut_out);
-        result_real = dut_out / 256.0; // 2^8 = 256.0 으로 나눔
-        
-        // 4. 오차 계산 (절대값)
-        error = result_real - expected;
-        if (error < 0) error = -error;
-        
-        $display("Deg: %3d | Exp: %.4f | Got: %.4f | Err: %.4f", 
-                 i, expected, result_real, error);
+// 1. 입력 생성 및 정답 계산 (Driver)
+task drive_radar_stimulus(int count);
+    real i_real, q_real, exp_energy;
+    logic signed [15:0] i_data, q_data;
 
-        // 허용 오차(Tolerance) 체크
-        if (error > 0.05) 
-            $error("Mismatch occurred! Error too high.");
+    repeat(count) begin
+        @ (posedge clk);
+        // 랜덤 데이터 생성
+        i_data = $urandom; 
+        q_data = $urandom;
+        
+        // 신호 인가
+        valid_in <= 1;
+        i_in     <= i_data;
+        q_in     <= q_data;
+
+        // Golden Model 계산 및 큐에 저장 (Push Pipeline)
+        i_real = i_data / 32768.0;
+        q_real = q_data / 32768.0;
+        exp_energy = (i_real * i_real) + (q_real * q_real);
+        
+        expected_q.push_back(exp_energy);
     end
-endtask</code></pre>
+    
+    @ (posedge clk);
+    valid_in <= 0;
+endtask
+
+// 2. 출력 모니터링 및 비교 (Monitor)
+task monitor_radar_result();
+    real exp_val, dut_val, error;
+
+    forever begin
+        @ (posedge clk);
+        if (out_valid) begin
+            // 큐에서 정답 꺼내기 (Pop Pipeline)
+            if (expected_q.size() == 0) begin
+                $error("[ERR] Unexpected output data!");
+                continue;
+            end
+            exp_val = expected_q.pop_front();
+            
+            // DUT 결과 변환
+            dut_val = energy_out / (32768.0 * 32768.0);
+            
+            // 오차 검증
+            error = (dut_val > exp_val) ? (dut_val - exp_val) : (exp_val - dut_val);
+            if (error > 0.01) $error("Mismatch! Exp:%.5f Got:%.5f", exp_val, dut_val);
+            else              $display("Pass! Exp:%.5f Got:%.5f", exp_val, dut_val);
+        end
+    end
+endtask
+
+// 3. 메인 실행 (Fork-Join 활용)
+initial begin
+    fork
+        monitor_radar_result();      // 모니터는 백그라운드에서 계속 동작
+        drive_radar_stimulus(100);   // 100개 샘플 인가
+    join_any // Stimulus가 끝나면 종료
+    
+    // 남은 파이프라인 처리 대기
+    wait(expected_q.size() == 0);
+    $finish;
+end</code></pre>
     </div>
 
 </section>
