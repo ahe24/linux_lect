@@ -13,16 +13,43 @@ sudo useradd -m -g eda_users -s /bin/bash engineer01
 # 비밀번호 설정
 sudo passwd engineer01</code></pre>
 
-    <h2>2. 데이터 및 툴 디렉토리 권한</h2>
-    <p>EDA 툴은 보통 <code>/tools</code> 또는 <code>/opt</code>에 설치하며, 공용 라이브러리는 읽기 전용으로 관리합니다.</p>
-    <pre><code class="language-bash"># 디렉토리 생성
-sudo mkdir -p /tools/xilinx /tools/mentor
+    <h2>2. 실습: 프로젝트 공유 폴더 만들기 (SetGID)</h2>
+    <p>팀원들이 파일을 생성할 때마다 자동으로 그룹 권한이 설정되도록 <strong>SetGID</strong>를 설정하는 과정을 실습해 봅니다.</p>
 
-# 소유권 변경 (관리자: root, 그룹: eda_users)
-sudo chown -R root:eda_users /tools
+    <div class="code-step">
+        <div class="step-title">Step 1: 디렉토리 생성 및 그룹 지정</div>
+        <pre><code class="language-bash"># 1. 프로젝트 폴더 생성
+sudo mkdir -p /projects/chip_a
 
-# 권한 설정 (소유자: RWX, 그룹: RX, 기타: RX)
-sudo chmod -R 755 /tools</code></pre>
+# 2. 그룹 소유권 변경 (eda_users 그룹에게 권한 부여)
+sudo chown -R :eda_users /projects/chip_a
+
+# [확인] 아직 일반적인 권한 상태입니다.
+ls -ld /projects/chip_a
+# drwxr-xr-x 2 root eda_users 4096 Jan 26 10:00 /projects/chip_a</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 2: 핵심! SetGID 설정 (g+s)</div>
+        <pre><code class="language-bash"># 3. 그룹에 쓰기 권한(w)과 SetGID(s) 부여
+sudo chmod g+w,g+s /projects/chip_a
+
+# [확인] 그룹 권한 자리에 's'가 생긴 것을 주목하세요!
+ls -ld /projects/chip_a
+# drwxrwsr-x 2 root eda_users 4096 Jan 26 10:01 /projects/chip_a
+#      ^ 여기가 's'로 변함 (이 폴더 내 생성 파일은 자동으로 eda_users 그룹 가짐)</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 3: 동작 검증</div>
+        <pre><code class="language-bash"># 4. 테스트 파일 생성 (현재 사용자: engineer01)
+touch /projects/chip_a/test_logic.v
+
+# [결과 확인] 파일의 그룹이 자동으로 'eda_users'로 설정됨
+ls -l /projects/chip_a/test_logic.v
+# -rw-rw-r-- 1 engineer01 eda_users 0 Jan 26 10:02 test_logic.v
+#                          ^^^^^^^^^ (자동 상속 성공!)</code></pre>
+    </div>
     <h2>3. 파일 관리 및 압축 (Archiving)</h2>
     <p>프로젝트 백업 및 대용량 시뮬레이션 데이터 이동 시 필수적인 명령어입니다.</p>
 
