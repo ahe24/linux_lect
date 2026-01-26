@@ -56,6 +56,40 @@
         </div>
     </div>
 
+    <h3 style="margin-top:20px;">전광석화 코드 탐색</h3>
+    <div class="shortcut-grid">
+        <div class="shortcut-card">
+            <div class="card-title">현재 단어 검색 (Highlight)</div>
+            <div class="card-keys">
+                <span class="kbd-group"><span class="key">*</span></span>
+                <span class="kbd-group"><span class="key">#</span></span>
+            </div>
+            <div class="card-desc">다음 찾기 / 이전 찾기</div>
+        </div>
+        <div class="shortcut-card">
+            <div class="card-title">괄호 짝 찾기</div>
+            <div class="card-keys">
+                <span class="kbd-group"><span class="key">%</span></span>
+            </div>
+            <div class="card-desc">{ &lt;-&gt; } 이동</div>
+        </div>
+        <div class="shortcut-card">
+            <div class="card-title">파일 상/하단 이동</div>
+            <div class="card-keys">
+                <span class="kbd-group"><span class="key">gg</span></span>
+                <span class="kbd-group"><span class="key">G</span></span>
+            </div>
+            <div class="card-desc">맨 위 / 맨 아래</div>
+        </div>
+        <div class="shortcut-card">
+            <div class="card-title">이전 커서 위치 복귀</div>
+            <div class="card-keys">
+                <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">o</span></span>
+            </div>
+            <div class="card-desc">이전 위치로 점프</div>
+        </div>
+    </div>
+
     <h3 style="margin-top:20px;">선택과 편집 (Visual & Edit)</h3>
     <div class="shortcut-grid">
         <div class="shortcut-card">
@@ -144,9 +178,10 @@
         </div>
     </div>
 
-    <h2>3. 비주얼 블록 모드 (Visual Block) - Verilog 필수!</h2>
+    <h2 class="break-before">3. 비주얼 블록 모드 (Visual Block) - Verilog 필수!</h2>
     <p>Verilog 포트 리스트나 인스턴스를 연결할 때, <strong>세로로 드래그해서 한 번에 편집</strong>하는 기능입니다. 이것만 알면 작업 속도가 3배 빨라집니다.</p>
 
+    <h3>기본 조작 (Basic Controls)</h3>
     <div class="shortcut-grid">
         <div class="shortcut-card">
             <div class="card-title">블록 지정 시작</div>
@@ -161,61 +196,102 @@
                 <span class="kbd-group"><span class="key">Shift</span>+<span class="key">i</span> &rarr; 입력 &rarr; <span
                         class="key">ESC</span></span>
             </div>
-            <div class="card-desc">여러 줄에 동시 입력</div>
+            <div class="card-desc">여러 줄에 동시 입력 (커서 앞)</div>
         </div>
         <div class="shortcut-card">
-            <div class="card-title">블록 삭제/복사</div>
+            <div class="card-title">블록 끝에 추가 (Multi Append)</div>
             <div class="card-keys">
-                <span class="kbd-group"><span class="key">x</span></span>
-                <span class="kbd-group"><span class="key">y</span></span>
+                <span class="kbd-group"><span class="key">Shift</span>+<span class="key">a</span> &rarr; 입력 &rarr; <span
+                        class="key">ESC</span></span>
             </div>
-            <div class="card-desc">삭제 / 복사</div>
+            <div class="card-desc">여러 줄에 동시 추가 (커서 뒤)</div>
         </div>
         <div class="shortcut-card">
-            <div class="card-title">문자열 덮어쓰기</div>
+            <div class="card-title">블록 변경 (Change)</div>
             <div class="card-keys">
-                <span class="kbd-group"><span class="key">r</span> + <span class="key">문자</span></span>
+                <span class="kbd-group"><span class="key">c</span> &rarr; 입력 &rarr; <span class="key">ESC</span></span>
             </div>
-            <div class="card-desc">선택된 영역을 특정 문자로 채움</div>
+            <div class="card-desc">선택 영역 삭제 후 입력</div>
         </div>
     </div>
 
-    <h2>4. 전광석화 코드 탐색 (Navigation)</h2>
-    <p>긴 코드에서 길을 잃지 않으려면 커서 이동 마스터가 되어야 합니다.</p>
-    <div class="shortcut-grid">
-        <div class="shortcut-card">
-            <div class="card-title">현재 단어 검색 (Highlight)</div>
-            <div class="card-keys">
-                <span class="kbd-group"><span class="key">*</span></span>
-                <span class="kbd-group"><span class="key">#</span></span>
-            </div>
-            <div class="card-desc">다음 찾기 / 이전 찾기</div>
+    <h3>실전 활용 예제 (Pro Tips)</h3>
+
+    <!-- Tip 1: Sequential Numbers -->
+    <div class="note-box" style="display:block;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <i class="icon-h3"></i>
+            <strong style="color:var(--text-primary); font-size:1.1rem;">Tip 1: 숫자 연속 자동 증가 (Sequence)</strong>
         </div>
-        <div class="shortcut-card">
-            <div class="card-title">괄호 짝 찾기</div>
-            <div class="card-keys">
-                <span class="kbd-group"><span class="key">%</span></span>
+        <p style="margin-bottom:10px;">복사 붙여넣기 후, 숫자만 0, 1, 2...로 바꾸고 싶을 때 사용합니다.</p>
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:250px;">
+                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:5px;">Before</div>
+                <pre style="margin:0; padding:10px; background:rgba(0,0,0,0.3);"><code class="language-verilog">assign data[0] = 0;
+assign data[0] = 0;
+assign data[0] = 0;
+assign data[0] = 0;</code></pre>
             </div>
-            <div class="card-desc">{ &lt;-&gt; } 이동</div>
-        </div>
-        <div class="shortcut-card">
-            <div class="card-title">파일 상/하단 이동</div>
-            <div class="card-keys">
-                <span class="kbd-group"><span class="key">gg</span></span>
-                <span class="kbd-group"><span class="key">G</span></span>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;">
+                <div style="font-weight:bold; color:var(--accent-color);">Action:</div>
+                <ol style="padding-left:20px; color:var(--text-secondary);">
+                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> 로 '0'들
+                        세로 선택</li>
+                    <li><span class="kbd-group"><span class="key">g</span> <span class="key">Ctrl</span>+<span
+                                class="key">a</span></span> (증가)</li>
+                </ol>
+                <div style="font-size:0.85rem; color:var(--vim-green);">* 감소는 <span class="kbd-group"><span
+                            class="key">g</span> <span class="key">Ctrl</span>+<span class="key">x</span></span></div>
             </div>
-            <div class="card-desc">맨 위 / 맨 아래</div>
-        </div>
-        <div class="shortcut-card">
-            <div class="card-title">이전 커서 위치 복귀</div>
-            <div class="card-keys">
-                <span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">o</span></span>
+            <div style="flex:1; min-width:250px;">
+                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:5px;">After</div>
+                <pre style="margin:0; padding:10px; background:rgba(0,0,0,0.3);"><code class="language-verilog">assign data[0] = 0;
+assign data[1] = 1;
+assign data[2] = 2;
+assign data[3] = 3;</code></pre>
             </div>
-            <div class="card-desc">이전 위치로 점프</div>
         </div>
     </div>
 
-    <h2>5. 다중 창 활용 (Window Splits)</h2>
+    <!-- Tip 2: Append to End -->
+    <div class="note-box" style="display:block; margin-top:20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <i class="icon-h3"></i>
+            <strong style="color:var(--text-primary); font-size:1.1rem;">Tip 2: 모든 줄 끝에 세미콜론(;) 붙이기</strong>
+        </div>
+        <p style="margin-bottom:10px;">줄 길이가 달라도 끝부분에 일괄적으로 문자를 추가할 수 있습니다.</p>
+
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:250px;">
+                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:5px;">Before</div>
+                <pre style="margin:0; padding:10px; background:rgba(0,0,0,0.3);"><code class="language-verilog">wire a 
+wire [31:0] b
+wire c_data</code></pre>
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;">
+                <div style="font-weight:bold; color:var(--accent-color);">Action:</div>
+                <ol style="padding-left:20px; color:var(--text-secondary);">
+                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> 로 아무 세로줄
+                        선택</li>
+                    <li><span class="kbd-group"><span class="key">$</span></span> (블록을 줄 끝까지 확장)</li>
+                    <li><span class="kbd-group"><span class="key">A</span></span> (Append) &rarr; <span
+                            class="key">;</span> 입력</li>
+                    <li><span class="key">ESC</span> (모든 줄 적용)</li>
+                </ol>
+            </div>
+            <div style="flex:1; min-width:250px;">
+                <div style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:5px;">After</div>
+                <pre style="margin:0; padding:10px; background:rgba(0,0,0,0.3);"><code class="language-verilog">wire a;
+wire [31:0] b;
+wire c_data;</code></pre>
+            </div>
+        </div>
+    </div>
+
+
+
+    <h2>4. 다중 창 활용 (Window Splits)</h2>
     <p>Testbench와 RTL 코드를 동시에 띄워놓고 비교할 때 필수입니다.</p>
     <div class="shortcut-grid">
         <div class="shortcut-card">
@@ -249,7 +325,7 @@
         </div>
     </div>
 
-    <h2>6. 검색 및 일괄 치환 (Search & Replace)</h2>
+    <h2>5. 검색 및 일괄 치환 (Search & Replace)</h2>
     <p>변수명을 한 번에 바꿀 때 유용합니다. Verilog 리팩토링의 핵심입니다.</p>
     <pre><code class="language-bash"># 기본 검색 (Normal Mode)
 /clk_en      # 아래로 'clk_en' 검색
@@ -274,7 +350,7 @@ n / N        # 다음 / 이전 찾기
 # Tip: 'g' (global) 플래그를 빼면 각 줄의 첫 번째 일치 항목만 바뀝니다.
 # :%s/old/new        # (각 줄의 첫 번째 'old'만 'new'로 변경)</code></pre>
 
-    <h2>7. 매크로 (Macros): 반복 작업 자동화</h2>
+    <h2>6. 매크로 (Macros): 반복 작업 자동화</h2>
     <p>포트 리스트의 끝부분 문자를 변경하거나 규칙적인 패턴을 수정할 때 강력합니다.</p>
 
     <h3>실전 예제: 줄 끝 콤마(,)를 세미콜론(;)으로 바꾸기</h3>
@@ -307,7 +383,7 @@ wire [31:0] cpu_addr_4,</code></pre>
         </div>
     </div>
 
-    <h2>8. .vimrc 설정 (엔지니어 필수)</h2>
+    <h2>7. .vimrc 설정 (엔지니어 필수)</h2>
     <p>홈 디렉토리의 <code>~/.vimrc</code> 파일에 아래 내용을 추가하여 가독성을 높이세요.</p>
     <pre><code class="language-plaintext">" 문법 강조
 syntax on

@@ -93,7 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const isH1 = child.tagName === 'H1';
       const isH2 = child.tagName === 'H2';
-      const shouldBreak = isH1 || (isH2 && currentWeight >= THRESHOLD);
+      const forceBreak = child.classList.contains('break-before');
+      const shouldBreak = isH1 || (isH2 && currentWeight >= THRESHOLD) || forceBreak;
 
       if (shouldBreak && currentSlide.length > 0) {
         slides.push(currentSlide);

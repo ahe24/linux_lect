@@ -12,19 +12,62 @@
     </style>
 
     <h2>1. 지저분한 'Initial' 블록 탈출하기 (Task 활용)</h2>
-    <p>모든 신호 제어를 `initial begin ... end` 안에 때려 넣으면 스파게티 코드가 됩니다. <strong>Task</strong>로 동작을 모듈화하세요.</p>
-    <pre><code class="language-verilog">// 재사용 가능한 쓰기 동작 정의
-task bus_write(input logic [31:0] addr, input logic [31:0] data);
-    begin
-        @ (posedge clk);
-        cs_n     &lt;= 0;
-        rw_n     &lt;= 0; // Write
-        addr_bus &lt;= addr;
-        data_bus &lt;= data;
-        @ (posedge clk);
-        cs_n     &lt;= 1; // End cycle
-    end
-endtask</code></pre>
+    <p>모든 신호 제어를 `initial` 블록 안에 때려 넣으면 스파게티 코드가 됩니다. 반복적인 동작을 <strong>Task</strong>로 모듈화하여 해결하는 과정을 비교해보세요.</p>
+
+    <!-- Comparison Wrapper -->
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:20px;">
+
+        <!-- Bad Case -->
+        <div style="flex:1; min-width:300px;">
+            <h3
+                style="margin-top:0; color:#ff6b6b; font-size:1.1rem; border-bottom:2px solid #ff6b6b; padding-bottom:5px;">
+                <i data-lucide="x-circle" style="vertical-align:text-bottom; width:20px;"></i> Bad: 하드코딩의 늪
+            </h3>
+            <pre style="margin-top:10px;"><code class="language-verilog">initial begin
+    // 첫 번째 쓰기 (0x10)
+    @(posedge clk);
+    cs_n     &lt;= 0;
+    rw_n     &lt;= 0;
+    addr_bus &lt;= 32'h10;
+    data_bus &lt;= 32'hAA;
+    @(posedge clk);
+    cs_n     &lt;= 1;
+
+    // 두 번째 쓰기 (0x14) - 복붙 반복...
+    @(posedge clk);
+    cs_n     &lt;= 0;
+    rw_n     &lt;= 0;
+    addr_bus &lt;= 32'h14;
+    data_bus &lt;= 32'hBB;
+    @(posedge clk);
+    cs_n     &lt;= 1;
+end</code></pre>
+        </div>
+
+        <!-- Good Case -->
+        <div style="flex:1; min-width:300px;">
+            <h3
+                style="margin-top:0; color:#2ea043; font-size:1.1rem; border-bottom:2px solid #2ea043; padding-bottom:5px;">
+                <i data-lucide="check-circle-2" style="vertical-align:text-bottom; width:20px;"></i> Good: Task 모듈화
+            </h3>
+            <pre style="margin-top:10px;"><code class="language-verilog">// 1. 동작 정의 (Task)
+task bus_write(input [31:0] a, input [31:0] d);
+    @(posedge clk);
+    cs_n     &lt;= 0;
+    rw_n     &lt;= 0;
+    addr_bus &lt;= a;
+    data_bus &lt;= d;
+    @(posedge clk);
+    cs_n     &lt;= 1;
+endtask
+
+// 2. 메인 실행
+initial begin
+    bus_write(32'h10, 32'hAA);
+    bus_write(32'h14, 32'hBB);
+end</code></pre>
+        </div>
+    </div>
 
     <h2>2. 검증의 핵심: Fork-Join 시각화 및 패턴</h2>
     <p>병렬 프로세스를 제어하는 3가지 방식의 차이점과 <strong>"도대체 언제 쓰는가?"</strong>에 대한 실전 예시입니다.</p>
