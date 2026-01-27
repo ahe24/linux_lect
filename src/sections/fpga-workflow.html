@@ -157,20 +157,33 @@ clean:
 bitstream: 
 	vivado -mode batch -source run_synth.tcl</code></pre>
 
-    <h3>예시: run_synth.tcl (파일 리스트 읽기)</h3>
+    <h3>예시: run_synth.tcl (파일 리스트 + IP + Include 경로)</h3>
     <pre><code class="language-tcl"># run_synth.tcl
 create_project -in_memory -part xc7a35ticsg324-1L
+
+# Verilog Include 경로 설정 (헤더 파일이 있는 디렉토리)
+set_property include_dirs {../src/include ../ip/include} [current_fileset]
 
 # 파일 리스트 읽기 함수
 set fp [open "sources.f" r]
 set file_data [read $fp]
 close $fp
 
-# 라인별로 읽어서 read_verilog 실행
+# 라인별로 읽어서 파일 형식에 맞게 처리
 foreach line [split $file_data "\n"] {
     # 빈 줄이나 주석(#) 제외
     if {[string length $line] > 0 && ![string match "#*" $line]} {
-        read_verilog $line
+        # 파일 확장자에 따라 다른 명령어 사용
+        if {[string match "*.xci" $line]} {
+            # Xilinx IP 파일 (.xci)
+            read_ip $line
+        } elseif {[string match "*.vhd" $line] || [string match "*.vhdl" $line]} {
+            # VHDL 파일
+            read_vhdl $line
+        } elseif {[string match "*.v" $line] || [string match "*.sv" $line]} {
+            # Verilog/SystemVerilog 파일
+            read_verilog $line
+        }
     }
 }
 
@@ -181,4 +194,34 @@ opt_design
 place_design
 route_design
 write_bitstream -force ./build_output/final.bit</code></pre>
+
+    <div class="note-box">
+        <i data-lucide="lightbulb"></i>
+        <div>
+            <strong>sources.f 파일 예시 (Verilog + VHDL + IP 혼합):</strong><br>
+            다양한 파일 형식을 하나의 리스트로 관리할 수 있습니다.
+            <pre style="margin-top:10px; background:rgba(0,0,0,0.3); padding:10px;"><code class="language-plaintext"># Verilog RTL
+../src/defines.v
+../src/alu.v
+
+# SystemVerilog
+../src/cpu_top.sv
+
+# VHDL 서드파티 IP (예: 암호화 모듈)
+../src/crypto/aes_core.vhd
+
+# Xilinx IP Cores
+../ip/clk_wiz_0/clk_wiz_0.xci
+../ip/fifo_generator_0/fifo_generator_0.xci</code></pre>
+        </div>
+    </div>
+
+    <div class="note-box">
+        <i data-lucide="info"></i>
+        <div>
+            <strong>Include 경로 설정 이유:</strong><br>
+            Verilog 코드에서 <code>`include "config.vh"</code> 같은 헤더 파일을 사용할 때, 합성 툴이 해당 파일을 찾을 수 있도록 경로를 명시해야 합니다.
+            <code>set_property include_dirs</code>로 여러 디렉토리를 지정하면 자동으로 검색됩니다.
+        </div>
+    </div>
 </section>
