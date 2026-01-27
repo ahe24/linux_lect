@@ -3,7 +3,89 @@
     <h1>FPGA Simulation Workflow</h1>
     <p>FPGA 개발의 꽃은 시뮬레이션입니다. Questasim과 Vivado를 리눅스 터미널(Makefile)에서 제어하는 방법을 마스터하세요.</p>
 
-    <h2>1. Questasim Makefile 완벽 분석</h2>
+    <h2>1. Makefile이란? (초보자 필독)</h2>
+    <p><strong>Makefile</strong>은 여러 명령어를 하나의 단축키처럼 묶어 실행하는 자동화 도구입니다. GUI 없이 터미널에서 복잡한 시뮬레이션을 제어할 때 필수입니다.</p>
+
+    <div class="note-box">
+        <i data-lucide="lightbulb"></i>
+        <div>
+            <strong>왜 필요한가요?</strong><br>
+            시뮬레이션 한 번 돌리려면 보통 5~10개 명령어를 순서대로 입력해야 합니다. Makefile을 쓰면 <code>make sim</code> 단 한 줄로 모든 작업이 자동 실행됩니다.
+        </div>
+    </div>
+
+    <h3>핵심 구조 (Target과 Dependencies)</h3>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;">
+        <div class="syntax-card" style="border-left-color: var(--vim-green);">
+            <strong style="color:var(--vim-green); font-size:1.1em;">1. Target (목표 작업 정의)</strong>
+            <p style="margin-top:10px; color:var(--text-secondary);">실행하고 싶은 작업의 이름과 실제 명령어를 정의합니다.</p>
+            <pre style="margin-top:10px;"><code class="language-makefile"># 컴파일 작업
+compile:
+	vlib work
+	vlog top.v tb.v
+
+# 시뮬레이션 실행
+sim:
+	vsim -c work.tb -do "run -all"
+
+# 정리 작업
+clean:
+	rm -rf work *.log</code></pre>
+        </div>
+        <div class="syntax-card" style="border-left-color: #ff6b6b;">
+            <strong style="color:#ff6b6b; font-size:1.1em;">2. Dependencies (의존성 활용)</strong>
+            <p style="margin-top:10px; color:var(--text-secondary);">콜론(:) 뒤에 먼저 실행되어야 할 작업을 명시합니다.</p>
+            <pre style="margin-top:10px;"><code class="language-makefile"># sim 실행 전 compile 자동 실행
+sim: compile
+	vsim -do "run -all"
+
+# all은 모든 단계 순차 실행
+all: clean compile sim</code></pre>
+            <div
+                style="margin-top:10px; padding:10px; background:rgba(88,166,255,0.1); border-radius:4px; font-size:0.9em;">
+                💡 <code>make sim</code> 입력 시:<br>
+                1. compile 먼저 실행<br>
+                2. 완료 후 sim 실행
+            </div>
+        </div>
+    </div>
+
+    <h3>꼭 알아야 할 문법 규칙</h3>
+    <div class="note-box">
+        <i data-lucide="alert-circle"></i>
+        <div>
+            <strong>⚠️ TAB 문자 필수!</strong><br>
+            명령어 앞에는 반드시 <strong>TAB</strong> 문자(스페이스 아님)가 있어야 합니다. 스페이스로 들여쓰기하면 에러가 발생합니다.
+            <pre style="margin-top:10px; background:rgba(0,0,0,0.3); padding:10px;"><code class="language-makefile">clean:
+	rm -rf work
+↑
+이 부분이 TAB 문자여야 함!</code></pre>
+        </div>
+    </div>
+
+    <h3>간단한 예시로 이해하기</h3>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:30px;">
+        <div style="flex:1; min-width:300px;">
+            <h4 style="margin-top:0; color:var(--text-secondary); font-size:1rem;">문제 상황 (수동 실행)</h4>
+            <pre><code class="language-bash"># 매번 이렇게 4줄을 타이핑해야 함
+vlib work
+vlog top.v
+vlog tb.v
+vsim -do "run -all"</code></pre>
+        </div>
+        <div style="flex:1; min-width:300px;">
+            <h4 style="margin-top:0; color:var(--vim-green); font-size:1rem;">해결책 (Makefile)</h4>
+            <pre><code class="language-makefile">sim:
+	vlib work
+	vlog top.v
+	vlog tb.v
+	vsim -do "run -all"</code></pre>
+            <p style="margin-top:10px; color:var(--text-secondary); font-size:0.9em;">이제 터미널에서 <code>make sim</code> 한
+                줄만 입력하면 끝!</p>
+        </div>
+    </div>
+
+    <h2>2. Questasim Makefile 완벽 분석</h2>
     <p>단순히 복사해서 쓰는 것이 아니라, 각 명령어의 의미를 이해해야 에러를 잡을 수 있습니다.</p>
 
     <div class="note-box">
@@ -69,7 +151,7 @@ clean:
         </div>
     </div>
 
-    <h2>2. Vivado 배포/합성 자동화 (Batch Mode)</h2>
+    <h2>3. Vivado 배포/합성 자동화 (Batch Mode)</h2>
     <p>Vivado에서도 파일 리스트(sources.f)를 Tcl로 파싱하여 관리하는 것이 유지보수에 좋습니다.</p>
     <pre><code class="language-makefile"># Makefile for Vivado
 bitstream: 

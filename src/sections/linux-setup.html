@@ -3,7 +3,79 @@
     <h1>Rocky Linux 9 for EDA Server</h1>
     <p>단순한 OS 설치를 넘어, 수천만 원짜리 EDA 툴이 돌아가는 <strong>엔터프라이즈급 서버 구축 노하우</strong>를 공유합니다.</p>
 
-    <h2>1. 파티션 및 파일시스템 전략</h2>
+    <h2>1. 리눅스 디렉토리 구조 기초</h2>
+    <p>리눅스는 모든 것이 파일이며, 계층적 디렉토리 구조를 가집니다. EDA 서버를 관리하려면 <strong>어디에 무엇이 있는지</strong> 알아야 합니다.</p>
+
+    <div class="note-box">
+        <i data-lucide="folder-tree"></i>
+        <div>
+            <strong>핵심 개념:</strong><br>
+            Windows의 <code>C:\Program Files</code>, <code>C:\Users</code>처럼, 리눅스도 용도별로 정해진 위치가 있습니다. 무작정 파일을 아무 곳에 저장하면
+            나중에 찾기 어렵고, 시스템 업데이트 시 문제가 생길 수 있습니다.
+        </div>
+    </div>
+
+    <h3>주요 디렉토리 용도 (FPGA 엔지니어 관점)</h3>
+    <div style="overflow-x:auto; margin-top:15px;">
+        <table style="width:100%; border-collapse:collapse; text-align:left; border:1px solid var(--border-color);">
+            <thead>
+                <tr style="background-color:var(--secondary-bg); border-bottom:2px solid var(--border-color);">
+                    <th style="padding:12px; width:15%;">디렉토리</th>
+                    <th style="padding:12px; width:35%;">용도</th>
+                    <th style="padding:12px; width:50%;">FPGA 개발 연관성</th>
+                </tr>
+            </thead>
+            <tbody style="font-size:0.95em;">
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/bin</code></td>
+                    <td style="padding:12px;">필수 실행 파일 (ls, cp, rm 등)</td>
+                    <td style="padding:12px; color:var(--text-secondary);">시스템 명령어. 건드릴 일 없음</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/etc</code></td>
+                    <td style="padding:12px;">시스템 설정 파일</td>
+                    <td style="padding:12px;"><strong>중요!</strong> 네트워크, 방화벽, 라이센스 설정 위치</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/home</code></td>
+                    <td style="padding:12px;">사용자 개인 폴더</td>
+                    <td style="padding:12px;"><strong>백업 1순위.</strong> 프로젝트 소스, 시뮬레이션 데이터</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/opt</code></td>
+                    <td style="padding:12px;">외부 소프트웨어 설치 권장 위치</td>
+                    <td style="padding:12px;">EDA 툴 기본 설치 경로 (<code>/opt/Xilinx</code>)</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/tmp</code></td>
+                    <td style="padding:12px;">임시 파일 (재부팅 시 삭제됨)</td>
+                    <td style="padding:12px;">시뮬레이션 중간 파일 (<code>vsim.wlf</code>) 등</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/usr</code></td>
+                    <td style="padding:12px;">시스템 공용 프로그램/라이브러리</td>
+                    <td style="padding:12px;">패키지 관리자로 설치한 툴들 위치</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <td style="padding:12px;"><code>/var</code></td>
+                    <td style="padding:12px;">가변 데이터 (로그, 캐시)</td>
+                    <td style="padding:12px;"><code>/var/log</code>: 시스템 에러 추적 시 확인</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note-box" style="margin-top:20px;">
+        <i data-lucide="alert-triangle"></i>
+        <div>
+            <strong>관례와 권장사항:</strong><br>
+            - <strong>EDA 툴</strong>: <code>/opt</code> 또는 <code>/tools</code> (커스텀 디렉토리 생성)<br>
+            - <strong>프로젝트 데이터</strong>: <code>/home/[사용자명]</code> 또는 <code>/data</code> (별도 파티션 권장)<br>
+            - <strong>절대 금지</strong>: <code>/root</code>에 개인 작업 저장 (root 계정 전용이므로 권한 문제 발생)
+        </div>
+    </div>
+
+    <h2>2. 파티션 및 파일시스템 전략</h2>
     <p>OS 재설치 시에도 데이터와 툴을 보호하기 위해 물리적/논리적 파티션 분리는 필수입니다.</p>
     <div class="shortcut-grid">
         <div class="shortcut-card">
@@ -24,7 +96,7 @@
         </div>
     </div>
 
-    <h2>2. 필수 의존성 패키지 (Ghost Libraries)</h2>
+    <h2>3. 필수 의존성 패키지 (Ghost Libraries)</h2>
     <p>최신 OS(Rocky 9)에 이전 세대 EDA 툴을 설치할 때 발생하는 라이브러리 에러 해결책입니다.</p>
     <pre><code class="language-bash"># 1. EPEL 저장소 활성화
 sudo dnf install -y epel-release
@@ -50,7 +122,7 @@ sudo dnf install -y libnsl libX11 libXext libXft libXtst \
         </div>
     </div>
 
-    <h2>3. EDA 툴 설치 표준 절차</h2>
+    <h2>4. EDA 툴 설치 표준 절차</h2>
     <p>EDA 툴은 설치 위치와 권한 설정이 매우 중요합니다. 무턱대고 <code>root</code>로 설치하면 나중에 관리가 어려워집니다.</p>
 
     <h3>1단계: 설치 디렉토리 준비 (Root 권한 필요)</h3>
@@ -82,7 +154,7 @@ sudo chown -R $USER:$USER /tools/Xilinx</code></pre>
         </div>
     </div>
 
-    <h2>4. 버전별 환경 설정 관리 (Shell Script 활용)</h2>
+    <h2>5. 버전별 환경 설정 관리 (Shell Script 활용)</h2>
     <p>Environment Modules와 같은 도구는 설정이 복잡할 수 있습니다. 대신 <strong>버전별 설정 스크립트</strong>를 만들어 필요할 때만 <code>source</code> 하는
         방식이 훨씬 직관적입니다.</p>
 
@@ -115,7 +187,7 @@ echo "Vivado 2023.2 환경이 로드되었습니다."</code></pre>
 alias v2023='source ~/env_vivado_2023.sh'
 alias v2024='source ~/env_vivado_2024.sh'</code></pre>
 
-    <h2>5. 다중 사용자 권한 관리 (협업의 핵심)</h2>
+    <h2>6. 다중 사용자 권한 관리 (협업의 핵심)</h2>
     <p>여러 엔지니어가 하나의 프로젝트 폴더를 공유할 때, <strong>"동료가 만든 파일을 수정할 수 없는 문제(Permission Denied)"</strong>가 반드시 발생합니다. 매번
         <code>chmod 777</code>을 하는 것은 보안상 최악입니다.
     </p>
