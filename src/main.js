@@ -4,6 +4,7 @@ import bash from 'highlight.js/lib/languages/bash';
 import makefile from 'highlight.js/lib/languages/makefile';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import verilog from 'highlight.js/lib/languages/verilog';
+import tcl from 'highlight.js/lib/languages/tcl';
 
 // Import HTML Fragments
 import homeHtml from './sections/home.html?raw';
@@ -20,6 +21,7 @@ hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('makefile', makefile);
 hljs.registerLanguage('plaintext', plaintext);
 hljs.registerLanguage('verilog', verilog);
+hljs.registerLanguage('tcl', tcl);
 
 document.addEventListener('DOMContentLoaded', () => {
   // 0. Inject Content
