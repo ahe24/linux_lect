@@ -96,6 +96,113 @@
         </div>
     </div>
 
+    <h3 style="margin-top:30px;">실전 팁: 별도 디스크 추가 및 마운트</h3>
+    <p>프로덕션 환경에서는 <strong>OS 디스크와 데이터 디스크를 물리적으로 분리</strong>하는 것이 모범 사례입니다. OS 장애가 발생해도 EDA 툴과 프로젝트 데이터는 보호됩니다.</p>
+
+    <div class="note-box">
+        <i data-lucide="hard-drive"></i>
+        <div>
+            <strong>왜 별도 디스크를 사용하나요?</strong><br>
+            • <strong>데이터 보호</strong>: OS 재설치 시에도 /tools, /home 데이터 안전<br>
+            • <strong>성능 향상</strong>: OS와 시뮬레이션 I/O 경합 방지<br>
+            • <strong>용량 확장</strong>: 나중에 디스크 추가만으로 쉽게 확장 가능
+        </div>
+    </div>
+
+    <h4 style="margin-top:20px;">단계별 마운트 절차</h4>
+
+    <div class="code-step">
+        <div class="step-title">Step 1: 디스크 확인</div>
+        <pre><code class="language-bash"># 연결된 디스크 목록 확인
+lsblk
+
+# 출력 예시:
+# NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+# sda      8:0    0   500G  0 disk           ← OS 디스크
+# ├─sda1   8:1    0   512M  0 part /boot/efi
+# └─sda2   8:2    0   499G  0 part /
+# sdb      8:16   0     2T  0 disk           ← 새로 추가한 디스크 (아직 파티션 없음)</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 2: 파티션 생성 (선택사항)</div>
+        <p style="margin-top:10px; color:var(--text-secondary); font-size:0.9em;">
+            전체 디스크를 하나의 파티션으로 사용하는 경우가 일반적입니다. 아래는 GPT 파티션 테이블을 사용한 예시입니다.
+        </p>
+        <pre><code class="language-bash"># parted로 GPT 파티션 생성
+sudo parted /dev/sdb
+
+(parted) mklabel gpt                    # GPT 파티션 테이블 생성
+(parted) mkpart primary ext4 0% 100%    # 전체 용량을 하나의 파티션으로
+(parted) quit
+
+# 결과 확인
+lsblk
+# sdb      8:16   0     2T  0 disk
+# └─sdb1   8:17   0     2T  0 part   ← 생성된 파티션</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 3: 파일시스템 생성</div>
+        <pre><code class="language-bash"># ext4 파일시스템 생성 (대용량 데이터에 적합)
+sudo mkfs.ext4 /dev/sdb1
+
+# 레이블 지정 (선택사항, 나중에 식별하기 편함)
+sudo e2label /dev/sdb1 EDA_DATA</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 4: 마운트 포인트 생성 및 임시 마운트</div>
+        <pre><code class="language-bash"># 마운트 포인트 디렉토리 생성
+sudo mkdir -p /data
+
+# 임시 마운트 (재부팅 시 사라짐)
+sudo mount /dev/sdb1 /data
+
+# 확인
+df -h | grep data
+# /dev/sdb1       2.0T   24K  1.9T   1% /data</code></pre>
+    </div>
+
+    <div class="code-step">
+        <div class="step-title">Step 5: 영구 마운트 설정 (/etc/fstab)</div>
+        <p style="margin-top:10px; color:var(--text-secondary); font-size:0.9em;">
+            <strong>중요!</strong> fstab에 추가해야 재부팅 후에도 자동으로 마운트됩니다.
+        </p>
+        <pre><code class="language-bash"># 1. 디스크의 UUID 확인 (디바이스명보다 UUID 사용 권장)
+sudo blkid /dev/sdb1
+
+# 출력: /dev/sdb1: UUID="a1b2c3d4-..." TYPE="ext4" LABEL="EDA_DATA"
+
+# 2. /etc/fstab 파일에 추가
+sudo vi /etc/fstab
+
+# 아래 내용 추가 (UUID는 실제 값으로 대체)
+UUID=a1b2c3d4-...  /data  ext4  defaults,nofail  0  2
+#                   │      │     │                │  │
+#                   │      │     │                │  └─ fsck 순서 (0=체크안함, 1=루트, 2=기타)
+#                   │      │     │                └─ dump 백업 여부 (0=안함, 1=함)
+#                   │      │     └─ 마운트 옵션 (nofail: 실패해도 부팅 계속)
+#                   │      └─ 파일시스템 타입
+#                   └─ 마운트 포인트
+
+# 3. 설정 테스트 (재부팅 없이 fstab 적용)
+sudo mount -a
+
+# 에러가 없으면 성공!</code></pre>
+    </div>
+
+    <div class="note-box" style="margin-top:20px;">
+        <i data-lucide="alert-triangle"></i>
+        <div>
+            <strong>실전 예시: /tools와 /data 분리</strong><br>
+            • 디스크 1 (500GB SSD): OS 전용 (/, /boot)<br>
+            • 디스크 2 (2TB HDD): /tools 마운트 (EDA 툴 설치용)<br>
+            • 디스크 3 (4TB HDD): /data 마운트 (프로젝트 데이터, 백업 1순위)<br>
+            이렇게 구성하면 OS 문제가 생겨도 디스크 2, 3은 그대로 보존되며, 새 OS 설치 후 다시 마운트만 하면 즉시 작업 재개 가능합니다.
+        </div>
+    </div>
+
     <h2>3. 필수 의존성 패키지 (Ghost Libraries)</h2>
     <p>최신 OS(Rocky 9)에 이전 세대 EDA 툴을 설치할 때 발생하는 라이브러리 에러 해결책입니다.</p>
     <pre><code class="language-bash"># 1. EPEL 저장소 활성화

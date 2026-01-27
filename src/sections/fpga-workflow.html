@@ -71,7 +71,7 @@ all: clean compile sim</code></pre>
 vlib work
 vlog top.v
 vlog tb.v
-vsim -do "run -all"</code></pre>
+vsim -c work.tb -do "run -all"</code></pre>
         </div>
         <div style="flex:1; min-width:300px;">
             <h4 style="margin-top:0; color:var(--vim-green); font-size:1rem;">해결책 (Makefile)</h4>
@@ -79,7 +79,7 @@ vsim -do "run -all"</code></pre>
 	vlib work
 	vlog top.v
 	vlog tb.v
-	vsim -do "run -all"</code></pre>
+	vsim -c work.tb -do "run -all"</code></pre>
             <p style="margin-top:10px; color:var(--text-secondary); font-size:0.9em;">이제 터미널에서 <code>make sim</code> 한
                 줄만 입력하면 끝!</p>
         </div>
