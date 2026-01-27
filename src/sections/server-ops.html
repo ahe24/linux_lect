@@ -4,6 +4,7 @@
     <p>여러 엔지니어가 사용하는 시뮬레이션 서버를 관리하기 위한 필수 명령어입니다.</p>
 
     <h2>1. 사용자 추가 및 그룹 관리</h2>
+    <h3>사용자 및 그룹 생성</h3>
     <pre><code class="language-bash"># EDA 그룹 생성
 sudo groupadd eda_users
 
@@ -12,6 +13,44 @@ sudo useradd -m -g eda_users -s /bin/bash engineer01
 
 # 비밀번호 설정
 sudo passwd engineer01</code></pre>
+
+    <h3>기존 사용자를 그룹에 추가</h3>
+    <pre><code class="language-bash"># sudo 권한 부여 (Red Hat: wheel, Debian: sudo)
+sudo usermod -aG wheel engineer01    # Red Hat/Rocky
+sudo usermod -aG sudo engineer01     # Debian/Ubuntu
+
+# 여러 그룹에 동시 추가 (-aG: append to group, 기존 그룹 유지)
+sudo usermod -aG eda_users,docker,license_server engineer01
+
+# ⚠️ 주의: -G만 사용하면 기존 그룹에서 제거되고 새 그룹만 남음 (위험!)
+# sudo usermod -G newgroup engineer01  # 이렇게 하지 마세요!</code></pre>
+
+    <h3>사용자 정보 확인</h3>
+    <pre><code class="language-bash"># 현재 사용자 정보 (UID, GID, 소속 그룹)
+id
+
+# 특정 사용자 정보 확인
+id engineer01
+# uid=1001(engineer01) gid=1001(eda_users) groups=1001(eda_users),10(wheel)
+
+# 사용자가 속한 모든 그룹 확인
+groups engineer01
+
+# 시스템의 모든 사용자 확인
+getent passwd | tail -n 5
+
+# 특정 그룹의 멤버 확인
+getent group eda_users
+# eda_users:x:1001:engineer01,engineer02,engineer03</code></pre>
+
+    <div class="note-box">
+        <i data-lucide="alert-circle"></i>
+        <div>
+            <strong>그룹 변경 후 재로그인 필수!</strong><br>
+            <code>usermod -aG</code>로 그룹을 추가한 뒤에는 해당 사용자가 <strong>로그아웃 후 재로그인</strong>해야 새 그룹 권한이 적용됩니다.
+            <code>groups</code> 명령으로 확인하세요.
+        </div>
+    </div>
 
     <h2>2. 실습: 프로젝트 공유 폴더 만들기 (SetGID)</h2>
     <p>팀원들이 파일을 생성할 때마다 자동으로 그룹 권한이 설정되도록 <strong>SetGID</strong>를 설정하는 과정을 실습해 봅니다.</p>
@@ -50,7 +89,7 @@ ls -l /projects/chip_a/test_logic.v
 # -rw-rw-r-- 1 engineer01 eda_users 0 Jan 26 10:02 test_logic.v
 #                          ^^^^^^^^^ (자동 상속 성공!)</code></pre>
     </div>
-    <h2>3. 파일 관리 및 압축 (Archiving)</h2>
+    <h2 class="break-before">3. 파일 관리 및 압축 (Archiving)</h2>
     <p>프로젝트 백업 및 대용량 시뮬레이션 데이터 이동 시 필수적인 명령어입니다.</p>
 
     <h3>파일 복사 및 이동</h3>

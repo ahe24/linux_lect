@@ -26,7 +26,7 @@ hljs.registerLanguage('tcl', tcl);
 document.addEventListener('DOMContentLoaded', () => {
   // 0. Inject Content
   const mainComponent = document.querySelector('main');
-  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + shellHtml + vimHtml + svHtml + workflowHtml;
+  mainComponent.innerHTML = homeHtml + distroHtml + setupHtml + serverOpsHtml + vimHtml + svHtml + workflowHtml + shellHtml;
 
   // ==========================================
   // ==========================================
@@ -329,6 +329,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth <= 768 && sidebar.classList.contains('active')) {
       sidebar.classList.remove('active');
     }
+  });
+
+  // Shortcut Card Click Navigation
+  const shortcutCards = document.querySelectorAll('.shortcut-card[data-target]');
+  shortcutCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const targetId = card.getAttribute('data-target');
+      const targetGroup = document.querySelector(`.nav-group[data-target="${targetId}"]`);
+
+      if (targetGroup) {
+        const navHeader = targetGroup.querySelector('.nav-header');
+        // Trigger the existing navigation logic
+        navHeader.click();
+      }
+    });
   });
 
   // Initial UI Update
