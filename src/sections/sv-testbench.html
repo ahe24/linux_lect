@@ -11,7 +11,140 @@
         }
     </style>
 
-    <h2>1. 지저분한 'Initial' 블록 탈출하기 (Task 활용)</h2>
+    <h2>1. Testbench 기본 구조와 필수 문법</h2>
+    <p>Testbench는 <strong>DUT(Design Under Test)</strong>를 검증하기 위한 가상의 환경입니다. 핵심 구성요소와 기본 규칙을 먼저 알아봅시다.</p>
+
+    <!-- Diagram Style -->
+    <style>
+        .tb-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tb-box {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            background: var(--panel-color);
+            position: relative;
+            min-width: 120px;
+        }
+
+        .tb-box.dut {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+        }
+
+        .tb-arrow {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+        }
+
+        .tb-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .tb-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .syntax-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--vim-green);
+            padding: 15px;
+        }
+    </style>
+
+    <!-- Diagram -->
+    <div class="tb-diagram">
+        <div class="tb-box">
+            <span class="tb-label">Stimulus</span>
+            <span class="tb-desc">입력 생성<br>(Driver)</span>
+        </div>
+        <div class="tb-arrow">&rarr;</div>
+        <div class="tb-box dut">
+            <span class="tb-label">DUT</span>
+            <span class="tb-desc">설계 모듈<br>(Design)</span>
+        </div>
+        <div class="tb-arrow">&rarr;</div>
+        <div class="tb-box">
+            <span class="tb-label">Monitor</span>
+            <span class="tb-desc">출력 검증<br>(Scoreboard)</span>
+        </div>
+    </div>
+
+    <!-- Syntax Basics -->
+    <h3 style="margin-top:30px;">문법 3대장 (Data Type, Timing, Block)</h3>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:40px;">
+        <div class="syntax-card">
+            <strong style="color:var(--vim-green); font-size:1.1em;">1. Data Types</strong>
+            <ul style="margin-top:10px; padding-left:20px; line-height:1.6; color:var(--text-secondary);">
+                <li><code>reg/wire</code> &rarr; <strong>logic</strong> (권장)</li>
+                <li>TB 내부는 99% <code>logic</code> 쓰면 됨</li>
+                <li>DUT 입력 포트 연결은 <code>logic</code> (변수)</li>
+                <li>DUT 출력 포트 연결은 <code>wire</code> (선)</li>
+            </ul>
+        </div>
+        <div class="syntax-card" style="border-left-color: #ff6b6b;">
+            <strong style="color:#ff6b6b; font-size:1.1em;">2. Timing & Blocking</strong>
+            <ul style="margin-top:10px; padding-left:20px; line-height:1.6; color:var(--text-secondary);">
+                <li><code>#10</code> : 절대 시간 지연 (Delay)</li>
+                <li><code>@ (posedge clk)</code> : 클럭 동기화 (필수)</li>
+                <li><code>=</code> (Blocking): 순서대로 실행 (함수용)</li>
+                <li><code>&lt;=</code> (Non-Blocking): 동시 실행 (F/F용)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Simple Mapping Code -->
+    <div class="code-snippet-box" style="margin-top: 20px;">
+        <span class="code-snippet-title">🔎 한 눈에 보는 기본 구조 (Code Mapping)</span>
+        <p>위 다이어그램의 구조가 실제 코드로 어떻게 구현되는지 확인해보세요.</p>
+        <pre style="margin-top:10px;"><code class="language-verilog">module tb_simple;
+    // 1. 연결 선 선언 (Signals)
+    logic clk, rst_n;
+    logic [7:0] data_in, data_out;
+
+    // 2. DUT 연결 (Design Under Test)
+    my_design u_dut (
+        .clk(clk),
+        .rst_n(rst_n),
+        .data_in(data_in),
+        .data_out(data_out)
+    );
+
+    // 3. 입력 생성 (Stimulus/Driver)
+    initial begin
+        clk = 0;
+        rst_n = 0;
+        data_in = 0;
+        
+        #20 rst_n = 1;      // 20ns 후 리셋 해제
+        
+        @(posedge clk);     // 클럭 동기화
+        data_in &lt;= 8'hAA;   // 데이터 인가
+    end
+
+    // 4. 클럭 생성 (Clock Gen)
+    always #5 clk = ~clk;   // 10ns 주기 (100MHz)
+
+    // 5. 출력 확인 (Monitor)
+    always @(posedge clk) begin
+        if (rst_n) $display("Time: %0t, Out: %h", $time, data_out);
+    end
+endmodule</code></pre>
+    </div>
+
+    <h2>2. 지저분한 'Initial' 블록 탈출하기 (Task 활용)</h2>
     <p>모든 신호 제어를 `initial` 블록 안에 때려 넣으면 스파게티 코드가 됩니다. 반복적인 동작을 <strong>Task</strong>로 모듈화하여 해결하는 과정을 비교해보세요.</p>
 
     <!-- Comparison Wrapper -->
@@ -69,7 +202,7 @@ end</code></pre>
         </div>
     </div>
 
-    <h2>2. 검증의 핵심: Fork-Join 시각화 및 패턴</h2>
+    <h2>3. 검증의 핵심: Fork-Join 시각화 및 패턴</h2>
     <p>병렬 프로세스를 제어하는 3가지 방식의 차이점과 <strong>"도대체 언제 쓰는가?"</strong>에 대한 실전 예시입니다.</p>
 
     <style>
@@ -120,14 +253,14 @@ end</code></pre>
             border-left: 3px solid var(--accent-color);
             padding: 10px;
             margin-bottom: 30px;
-            font-size: 0.9em;
         }
 
         .code-snippet-title {
-            color: #aaa;
+            color: var(--accent-color);
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             display: block;
+            font-size: 1.2rem;
         }
     </style>
 
@@ -231,7 +364,7 @@ join_none // 기다리지 않음! 바로 아래 리셋 로직 실행
 #100 rst_n = 1; // 병렬 프로세스들이 도는 동안 실행됨</code></pre>
     </div>
 
-    <h2>3. 전체 통합 코드 (DUT + Stimulus + Monitor)</h2>
+    <h2>4. 전체 통합 코드 (DUT + Stimulus + Monitor)</h2>
     <pre><code class="language-verilog">`timescale 1ns/1ps
 
 module tb_top;
@@ -305,7 +438,7 @@ module tb_top;
 
 endmodule</code></pre>
 
-    <h2>4. 실전 시나리오 더보기 (Advanced Scenarios)</h2>
+    <h2>5. 실전 시나리오 더보기 (Advanced Scenarios)</h2>
     <p>현업에서 자주 마주치는 패킷 생성과 알고리즘 검증 패턴입니다.</p>
 
     <div class="code-snippet-box">
