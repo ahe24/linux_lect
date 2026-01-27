@@ -47,56 +47,89 @@
     </div>
 
     <h2>2. 필수 명령어 차이점</h2>
-    <p>가장 자주 사용하는 패키지 관리 명령어를 비교합니다.</p>
+    <p>가장 자주 사용하는 패키지 및 시스템 관리 명령어를 비교합니다.</p>
 
     <div style="overflow-x: auto; margin-top: 15px;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid var(--border-color);">
             <thead>
-                <tr style="background-color: var(--secondary-bg); border-bottom: 2px solid var(--border-color);">
-                    <th style="padding: 12px; width: 20%;">동작 (Action)</th>
-                    <th style="padding: 12px; width: 40%; color: #ff6b6b;">Red Hat (dnf/yum)</th>
-                    <th style="padding: 12px; width: 40%; color: #4ecdc4;">Debian (apt)</th>
+                <tr
+                    style="background: linear-gradient(135deg, rgba(80, 80, 80, 0.5), rgba(60, 60, 60, 0.6)); border-bottom: 3px solid var(--accent-color);">
+                    <th
+                        style="padding: 16px 12px; width: 20%; font-size: 1.05em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-right: 1px solid rgba(255,255,255,0.1);">
+                        동작 (Action)</th>
+                    <th
+                        style="padding: 16px 12px; width: 40%; font-size: 1.05em; font-weight: 700; color: #ff6b6b; border-right: 1px solid rgba(255,255,255,0.05);">
+                        Red Hat (dnf/yum)</th>
+                    <th style="padding: 16px 12px; width: 40%; font-size: 1.05em; font-weight: 700; color: #4ecdc4;">
+                        Debian (apt)</th>
                 </tr>
             </thead>
             <tbody style="font-family: var(--font-mono); font-size: 0.95em;">
                 <!-- Package Management -->
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 12px; font-family: var(--font-sans); font-weight: 600;">패키지 설치</td>
-                    <td style="padding: 12px;">dnf install [pkg]</td>
-                    <td style="padding: 12px;">apt install [pkg]</td>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        패키지 설치</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">dnf install [pkg]
+                    </td>
+                    <td style="padding: 14px 12px;">apt install [pkg]</td>
                 </tr>
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 12px; font-family: var(--font-sans); font-weight: 600;">패키지 업데이트</td>
-                    <td style="padding: 12px;">dnf update</td>
-                    <td style="padding: 12px;">apt upgrade</td>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        패키지 업데이트</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">dnf update</td>
+                    <td style="padding: 14px 12px;">apt upgrade</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        패키지 검색</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">dnf search [keyword]
+                    </td>
+                    <td style="padding: 14px 12px;">apt search [keyword]</td>
                 </tr>
 
                 <!-- System Management Separator -->
-                <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(255,255,255,0.03);">
+                <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(100,100,100,0.15);">
                     <td colspan="3"
-                        style="padding: 8px; font-family: var(--font-sans); font-size: 0.85em; text-align:center; opacity:0.8; font-weight:bold;">
+                        style="padding: 10px; font-family: var(--font-sans); font-size: 0.9em; text-align:center; opacity:0.9; font-weight:bold; letter-spacing: 0.5px;">
                         시스템 관리 (System Ops)</td>
                 </tr>
 
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 12px; font-family: var(--font-sans); font-weight: 600;">방화벽 (Firewall)</td>
-                    <td style="padding: 12px;">firewall-cmd</td>
-                    <td style="padding: 12px;">ufw</td>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        방화벽 (Firewall)</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">firewall-cmd</td>
+                    <td style="padding: 14px 12px;">ufw</td>
                 </tr>
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 12px; font-family: var(--font-sans); font-weight: 600;">서비스 관리</td>
-                    <td colspan="2" style="padding: 12px; text-align:center; opacity: 0.7;">systemctl (공통 표준)</td>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        서비스 관리</td>
+                    <td colspan="2" style="padding: 14px 12px; text-align:center; opacity: 0.7;">systemctl (공통 표준)</td>
                 </tr>
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 12px; font-family: var(--font-sans); font-weight: 600;">관리자 그룹</td>
-                    <td style="padding: 12px;">wheel</td>
-                    <td style="padding: 12px;">sudo</td>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        사용자 추가 (Add User)</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">useradd [user]</td>
+                    <td style="padding: 14px 12px;">adduser [user]</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color); transition: background-color 0.2s;">
+                    <td
+                        style="padding: 14px 12px; font-family: var(--font-sans); font-weight: 600; background-color: rgba(255,255,255,0.02); border-right: 1px solid rgba(255,255,255,0.05);">
+                        보안 모듈 (Security)</td>
+                    <td style="padding: 14px 12px; border-right: 1px solid rgba(255,255,255,0.03);">getenforce /
+                        setenforce</td>
+                    <td style="padding: 14px 12px;">apparmor_status / aa-disable</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <h2>3. 시스템 설정 경로 차이</h2>
+    <h2 class="break-before">3. 시스템 설정 경로 차이</h2>
     <p>초기 서버 세팅 시 가장 많이 건드리는 파일 경로입니다.</p>
 
     <h3>네트워크 설정 (Network Config)</h3>
@@ -129,4 +162,5 @@ sudo systemctl enable sshd</code></pre>
             말고 Rocky Linux (RHEL 호환)를 선택하세요.
         </div>
     </div>
+
 </section>
