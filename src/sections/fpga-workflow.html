@@ -10,91 +10,142 @@
     <div style="background: linear-gradient(135deg, rgba(88,166,255,0.1) 0%, rgba(163,113,247,0.1) 100%); 
                 border: 1px solid var(--border-color); 
                 border-radius: 12px; 
-                padding: 30px; 
+                padding: 25px; 
                 margin: 30px 0;">
-        <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; position: relative;">
-            <!-- Step 1: RTL Design -->
+        <!-- Row 1: Spec → RTL/TB → Functional Sim → Synthesis -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 20px;">
+            <!-- Step 1: Design Spec -->
+            <div style="background: var(--panel-color); 
+                        border: 2px solid #8b5cf6; 
+                        border-radius: 8px; 
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">📋</span>
+                    <span style="color: #8b5cf6; font-weight: bold; font-size: 1.05rem;">1. Design Spec</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">요구사항 정의</div>
+            </div>
+
+            <!-- Step 2: RTL & Testbench -->
             <div style="background: var(--panel-color); 
                         border: 2px solid #58a6ff; 
                         border-radius: 8px; 
-                        padding: 20px; 
-                        text-align: center;
-                        position: relative;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">📝</div>
-                <div style="color: #58a6ff; font-weight: bold; margin-bottom: 8px;">1. RTL Design</div>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);">Verilog/VHDL<br>코드 작성</div>
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">✍️</span>
+                    <span style="color: #58a6ff; font-weight: bold; font-size: 1.05rem;">2. RTL & TB</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">Verilog 코드 작성</div>
             </div>
 
-            <!-- Arrow -->
-            <div
-                style="display: flex; align-items: center; justify-content: center; color: var(--accent-color); font-size: 1.5rem;">
-                →
-            </div>
-
-            <!-- Step 2: Simulation -->
+            <!-- Step 3: Functional Simulation -->
             <div style="background: var(--panel-color); 
                         border: 2px solid #2ea043; 
                         border-radius: 8px; 
-                        padding: 20px; 
-                        text-align: center;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">🔬</div>
-                <div style="color: #2ea043; font-weight: bold; margin-bottom: 8px;">2. Simulation</div>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);">Questasim/VCS<br>기능 검증</div>
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">🔬</span>
+                    <span style="color: #2ea043; font-weight: bold; font-size: 1.05rem;">3. Functional Sim</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">RTL 기능 검증</div>
             </div>
 
-            <!-- Arrow -->
-            <div
-                style="display: flex; align-items: center; justify-content: center; color: var(--accent-color); font-size: 1.5rem;">
-                →
-            </div>
-
-            <!-- Step 3: Synthesis -->
+            <!-- Step 4: Synthesis -->
             <div style="background: var(--panel-color); 
                         border: 2px solid #d29922; 
                         border-radius: 8px; 
-                        padding: 20px; 
-                        text-align: center;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
-                <div style="color: #d29922; font-weight: bold; margin-bottom: 8px;">3. Synthesis</div>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);">Vivado/Quartus<br>논리 합성</div>
-            </div>
-
-            <!-- Arrow -->
-            <div
-                style="display: flex; align-items: center; justify-content: center; color: var(--accent-color); font-size: 1.5rem;">
-                →
-            </div>
-
-            <!-- Step 4: Implementation -->
-            <div style="background: var(--panel-color); 
-                        border: 2px solid #a371f7; 
-                        border-radius: 8px; 
-                        padding: 20px; 
-                        text-align: center;">
-                <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
-                <div style="color: #a371f7; font-weight: bold; margin-bottom: 8px;">4. Implementation</div>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);">Place & Route<br>타이밍 클로저</div>
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">⚙️</span>
+                    <span style="color: #d29922; font-weight: bold; font-size: 1.05rem;">4. Synthesis</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">논리 합성</div>
             </div>
         </div>
 
-        <!-- Makefile Automation Highlight -->
-        <div style="margin-top: 30px; 
+        <!-- Vertical Arrow Down -->
+        <div
+            style="text-align: center; color: var(--accent-color); font-size: 1.8rem; margin: 12px 0; font-weight: bold;">
+            ↓
+        </div>
+
+        <!-- Row 2: Post-Syn Sim → P&R → Timing Sim → Bitstream/Test -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;">
+            <!-- Step 5: Post-Synthesis Simulation -->
+            <div style="background: var(--panel-color); 
+                        border: 2px solid #06b6d4; 
+                        border-radius: 8px; 
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">🧪</span>
+                    <span style="color: #06b6d4; font-weight: bold; font-size: 1.05rem;">5. Post-Syn Sim</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">합성 후 시뮬레이션</div>
+            </div>
+
+            <!-- Step 6: Implementation (P&R) -->
+            <div style="background: var(--panel-color); 
+                        border: 2px solid #a371f7; 
+                        border-radius: 8px; 
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">🗺️</span>
+                    <span style="color: #a371f7; font-weight: bold; font-size: 1.05rem;">6. P&R</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">Place & Route</div>
+            </div>
+
+            <!-- Step 7: Post-Route Timing Sim -->
+            <div style="background: var(--panel-color); 
+                        border: 2px solid #ec4899; 
+                        border-radius: 8px; 
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">⏱️</span>
+                    <span style="color: #ec4899; font-weight: bold; font-size: 1.05rem;">7. Timing Sim</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">타이밍 검증</div>
+            </div>
+
+            <!-- Step 8: Bitstream & Testing -->
+            <div style="background: var(--panel-color); 
+                        border: 2px solid #10b981; 
+                        border-radius: 8px; 
+                        padding: 16px; 
+                        text-align: left;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 2rem;">🎯</span>
+                    <span style="color: #10b981; font-weight: bold; font-size: 1.05rem;">8. Bitstream & Test</span>
+                </div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); padding-left: 0px;">FPGA 보드 테스트</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Makefile Automation Highlight -->
+    <div style="margin-top: 30px; 
                     padding: 20px; 
                     background: rgba(88,166,255,0.1); 
                     border-left: 4px solid var(--accent-color); 
                     border-radius: 6px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                <span style="font-size: 1.5rem;">🔧</span>
-                <strong style="color: var(--accent-color); font-size: 1.1rem;">Makefile 자동화의 핵심 가치</strong>
-            </div>
-            <ul style="margin-left: 20px; line-height: 1.8; color: var(--text-secondary);">
-                <li><strong>재현성 보장</strong>: 동일한 명령어로 누구나 같은 결과를 얻을 수 있습니다</li>
-                <li><strong>반복 작업 제거</strong>: 10줄 명령어 → <code>make sim</code> 한 줄로 단축</li>
-                <li><strong>의존성 관리</strong>: 변경된 파일만 재컴파일하여 시간 절감</li>
-                <li><strong>CI/CD 통합</strong>: Jenkins, GitLab CI에서 배치 모드 실행 가능</li>
-            </ul>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.5rem;">🔧</span>
+            <strong style="color: var(--accent-color); font-size: 1.1rem;">Makefile 자동화의 핵심 가치</strong>
         </div>
+        <ul style="margin-left: 20px; line-height: 1.8; color: var(--text-secondary);">
+            <li><strong>재현성 보장</strong>: 동일한 명령어로 누구나 같은 결과를 얻을 수 있습니다</li>
+            <li><strong>반복 작업 제거</strong>: 10줄 명령어 → <code>make sim</code> 한 줄로 단축</li>
+            <li><strong>의존성 관리</strong>: 변경된 파일만 재컴파일하여 시간 절감</li>
+            <li><strong>CI/CD 통합</strong>: Jenkins, GitLab CI에서 배치 모드 실행 가능</li>
+        </ul>
+    </div>
     </div>
 
     <h2 class="break-before">1. Makefile이란? (초보자 필독)</h2>
