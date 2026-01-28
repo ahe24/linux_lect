@@ -236,10 +236,13 @@ assign data[0] = 0;</code></pre>
             <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;">
                 <div style="font-weight:bold; color:var(--accent-color);">Action:</div>
                 <ol style="padding-left:20px; color:var(--text-secondary);">
-                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> 로 '0'들
-                        세로 선택</li>
+                    <li>커서를 첫 번째 '0'에 위치</li>
+                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> (Visual
+                        Block 모드 진입)</li>
+                    <li><span class="kbd-group"><span class="key">j</span><span class="key">j</span><span
+                                class="key">j</span></span> (아래로 3줄 확장하여 모든 '0' 선택)</li>
                     <li><span class="kbd-group"><span class="key">g</span> <span class="key">Ctrl</span>+<span
-                                class="key">a</span></span> (증가)</li>
+                                class="key">a</span></span> (선택한 숫자들을 0,1,2,3으로 증가)</li>
                 </ol>
                 <div style="font-size:0.85rem; color:var(--vim-green);">* 감소는 <span class="kbd-group"><span
                             class="key">g</span> <span class="key">Ctrl</span>+<span class="key">x</span></span></div>
@@ -272,12 +275,15 @@ wire c_data</code></pre>
             <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px;">
                 <div style="font-weight:bold; color:var(--accent-color);">Action:</div>
                 <ol style="padding-left:20px; color:var(--text-secondary);">
-                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> 로 아무 세로줄
-                        선택</li>
-                    <li><span class="kbd-group"><span class="key">$</span></span> (블록을 줄 끝까지 확장)</li>
-                    <li><span class="kbd-group"><span class="key">A</span></span> (Append) &rarr; <span
+                    <li>커서를 'wire'의 'w' 위치 (첫 줄)</li>
+                    <li><span class="kbd-group"><span class="key">Ctrl</span>+<span class="key">v</span></span> (Visual
+                        Block 모드 진입)</li>
+                    <li><span class="kbd-group"><span class="key">j</span><span class="key">j</span></span> (아래로 2줄 확장,
+                        세로 블록 선택)</li>
+                    <li><span class="kbd-group"><span class="key">$</span></span> (블록을 각 줄 끝까지 확장)</li>
+                    <li><span class="kbd-group"><span class="key">A</span></span> (Append 모드) → <span
                             class="key">;</span> 입력</li>
-                    <li><span class="key">ESC</span> (모든 줄 적용)</li>
+                    <li><span class="key">ESC</span> (모든 줄에 적용)</li>
                 </ol>
             </div>
             <div style="flex:1; min-width:250px;">
