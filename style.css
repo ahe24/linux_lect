@@ -367,6 +367,49 @@ pre code {
   z-index: 10;
 }
 
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  z-index: 100;
+  /* Hidden by default - shown only when scrollable and scrolled */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%);
+  /* Keep vertical centering */
+}
+
+.scroll-to-top:hover {
+  background-color: #4a94e8;
+  transform: translateY(calc(-50% - 5px));
+  /* Maintain centering + lift 5px */
+  box-shadow: 0 6px 20px rgba(88, 166, 255, 0.5);
+}
+
+.scroll-to-top i {
+  color: white;
+  width: 24px;
+  height: 24px;
+}
+
 /* Mobile Menu Toggle Button */
 #menu-toggle {
   display: none;

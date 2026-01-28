@@ -349,4 +349,80 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial UI Update
   updateControls();
 
+  // Scroll to Top Button
+  const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+  if (scrollToTopBtn) {
+    // Reinitialize lucide icons for the button
+    createIcons({ icons });
+
+    // Function to check if content is scrollable and update button visibility
+    const updateScrollButtonVisibility = () => {
+      const isSlideMode = mainComponent.classList.contains('slide-mode');
+      let isScrollable = false;
+      let scrollTop = 0;
+
+      if (isSlideMode) {
+        const activeSlide = document.querySelector('.content-section.active .slide.active');
+        if (activeSlide) {
+          isScrollable = activeSlide.scrollHeight > activeSlide.clientHeight;
+          scrollTop = activeSlide.scrollTop;
+        }
+      } else {
+        isScrollable = mainComponent.scrollHeight > mainComponent.clientHeight;
+        scrollTop = mainComponent.scrollTop;
+      }
+
+      // Show button only if content is scrollable AND scrolled > 300px
+      if (isScrollable && scrollTop > 300) {
+        scrollToTopBtn.classList.add('visible');
+      } else {
+        scrollToTopBtn.classList.remove('visible');
+      }
+    };
+
+    // Check on main component scroll (for normal mode)
+    mainComponent.addEventListener('scroll', updateScrollButtonVisibility);
+
+    // Add scroll listener to all slides (for slide mode)
+    const addSlideScrollListeners = () => {
+      document.querySelectorAll('.slide').forEach(slide => {
+        slide.addEventListener('scroll', updateScrollButtonVisibility);
+      });
+    };
+
+    // Initial setup
+    addSlideScrollListeners();
+
+    // Re-add listeners when slides are created/changed
+    const observer = new MutationObserver(() => {
+      addSlideScrollListeners();
+      updateScrollButtonVisibility();
+    });
+    observer.observe(mainComponent, { childList: true, subtree: true });
+
+    // Initial check
+    updateScrollButtonVisibility();
+
+    // Scroll to top when clicked
+    scrollToTopBtn.addEventListener('click', () => {
+      const isSlideMode = mainComponent.classList.contains('slide-mode');
+
+      if (isSlideMode) {
+        const activeSlide = document.querySelector('.content-section.active .slide.active');
+        if (activeSlide) {
+          activeSlide.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      } else {
+        mainComponent.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    });
+  }
+
 });
