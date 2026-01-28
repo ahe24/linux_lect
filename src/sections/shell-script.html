@@ -226,7 +226,7 @@ echo "✅ Done."</code></pre>
 
 # 1. 라이센스 서버 주소 (환경변수가 없으면 기본값 사용)
 # ${VAR:-DEFAULT} : VAR가 비어있으면 DEFAULT 값 사용
-LIC_SERVER=${SALT_LICENSE_SERVER:-"1717@ednc-net.iptime.org"}
+LIC_SERVER=${SALT_LICENSE_SERVER:-"1717@ednc"}
 
 # FlexLM 유틸리티 경로 (시스템에 따라 수정 필요)
 LMUTIL="lmutil" 
@@ -234,10 +234,26 @@ LMUTIL="lmutil"
 echo "🔍 Checking License Server: $LIC_SERVER"
 
 if [ -z "$1" ]; then
-    # 인자가 없으면: 전체 라이센스 "Users of" 라인만 요약 출력
-    # awk로 Feature 이름과 사용량만 깔끔하게 정리
-    $LMUTIL lmstat -a -c "$LIC_SERVER" | grep "Users of" | \
-    sed 's/Users of //g' | awk '{printf "%-20s : Total %s, Used %s\n", $1, $6, $11}'
+    # 인자가 없으면: 전체 라이센스 현황 요약 출력 (정상/에러 구분)
+    
+    echo ""
+    echo "📊 Valid Licenses:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    # 정상 라이선스만 출력 (Total of X licenses)
+    $LMUTIL lmstat -a -c "$LIC_SERVER" | grep "Users of" | grep -v "Error" | \
+    sed 's/Users of //g' | awk '{printf "%-25s : Total %2s, Used %2s\n", $1, $4, $9}'
+    
+    echo ""
+    echo "❌ Error/Unsupported Licenses:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    # 에러 라이선스만 출력
+    # 원본: "Users of q1sfvAa:  (Error: 1 licenses, unsupported by licensed server)"
+    # 변환: "q1sfvAa : 1 licenses, unsupported by licensed server"
+    $LMUTIL lmstat -a -c "$LIC_SERVER" | grep "Users of" | grep "Error" | \
+    sed 's/Users of //g; s/(Error://g; s/)//g' | \
+    awk -F':' '{gsub(/^[ \t]+|[ \t]+$/, "", $1); gsub(/^[ \t]+/, "", $2); printf "%-25s : %s\n", $1, $2}'
+    
+    echo ""
 else
     # 인자가 있으면: 특정 Feature의 상세 사용자 정보 출력
     FEATURE=$1
